@@ -2,6 +2,7 @@ import { useState } from 'react'
 import logo from './assets/full-logo.png'
 import './App.css'
 import ChatBot from './Chatbot'
+import ProfilePage from './Profile'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -13,6 +14,7 @@ function App() {
           <img src={logo} className="logo" alt="Vite logo" />
         </a>
       </div>
+      <ProfilePage />
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
