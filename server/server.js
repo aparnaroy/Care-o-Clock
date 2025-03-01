@@ -10,26 +10,24 @@ connectDB();
 
 const app = express();
 
-// ✅ FIX: Allow CORS for both local & deployed frontend
-app.use(
-  cors({
-    origin: ["https://care-o-clock.up.railway.app", "http://localhost:5173"], // 👈 Update with your frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // Allow cookies/auth headers if needed
-  })
-);
+// ✅ Log every incoming request
+app.use((req, res, next) => {
+  console.log(`🔍 Incoming Request: ${req.method} ${req.url}`);
+  next();
+});
 
+app.use(cors());
 app.use(express.json());
 
-// ✅ API routes should come before serving the frontend
+// ✅ API routes should be above React frontend serving
 app.use("/api/user", userRoutes);
 
-// ✅ Serve React frontend (Only for non-API requests)
+// ✅ Serve React frontend (only for non-API requests)
 const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, "../dist")));
 
 app.get("*", (req, res) => {
+  console.log("🚨 Frontend request intercepted:", req.originalUrl);
   res.sendFile(path.join(__dirname, "../dist", "index.html"));
 });
 

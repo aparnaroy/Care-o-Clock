@@ -3,25 +3,31 @@ import User from "../models/userModel.js";
 
 const router = express.Router();
 
-// Route: GET /api/user/:email
 router.get("/:email", async (req, res) => {
-  try {
-    const user = await User.findOne(
-      { email: req.params.email.toLowerCase() }, // Ensure case-insensitive search
-      {
-        _id: 0, // Exclude _id field from response
-        "medical_profile.legal_name": 1,
-        "medical_profile.dob": 1,
-        "medical_profile.emergency_contact": 1,
-        "medical_profile.medical_conditions": 1,
-      }
-    );
+  console.log(`🔍 Received request for email: ${req.params.email}`);
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+  try {
+    // Log all users to check if data exists
+    const allUsers = await User.find({});
+    console.log("📢 All Users in DB:", allUsers);
+
+    // Log all emails in the database
+    const emails = allUsers.map(user => user.email);
+    console.log("📢 Emails in DB:", emails);
+
+    // Run case-insensitive search
+    const user = await User.findOne({ email: new RegExp(`^${req.params.email}$`, "i") });
+
+    console.log(`📢 MongoDB Response:`, user);
+
+    if (!user) {
+      console.log("❌ User not found");
+      return res.status(404).json({ message: "User not found" });
+    }
 
     res.json(user);
   } catch (error) {
-    console.error("Error fetching user:", error);
+    console.error("❌ API Error:", error);
     res.status(500).json({ message: "Server error", error });
   }
 });
