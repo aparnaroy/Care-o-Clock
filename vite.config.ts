@@ -7,9 +7,6 @@ export default defineConfig({
   preview: {
     // Allow external access on Railway
     host: '0.0.0.0',
-    // Optionally, you can specify a port (Railway usually sets PORT automatically):
-    // port: 4173,
-    // Add the domain you want to allow
     allowedHosts: ['care-o-clock.up.railway.app']
   },
 })
