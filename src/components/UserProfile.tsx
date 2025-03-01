@@ -20,6 +20,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       const data: User | null = await getUserByEmail("johndoe@gmail.com");
+      console.log("Fetched User:", data); // ✅ Logging moved here
       setUser(data);
     };
 
