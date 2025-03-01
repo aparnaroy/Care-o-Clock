@@ -3,6 +3,7 @@ import logo from './assets/full-logo.png'
 import './App.css'
 import ChatBot from './Chatbot'
 import UserProfile from './components/UserProfile'
+import { Login } from './Login'
 // import ProfilePage from './Profile'
 
 function App() {
@@ -24,6 +25,8 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
+        <Login />
+        <Login />
         <ChatBot />
       </div>
       <p className="read-the-docs">
