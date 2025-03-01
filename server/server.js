@@ -13,7 +13,7 @@ const app = express();
 // ✅ FIX: Allow CORS for both local & deployed frontend
 app.use(
   cors({
-    origin: ["https://care-o-clock.up.railway.app", "http://localhost:5173"], // 👈 Update with your frontend URL
+    origin: ["https://care-o-clock.up.railway.app", "http://localhost:5173", "http://localhost:5000"], // 👈 Update with your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // Allow cookies/auth headers if needed
