@@ -2,6 +2,7 @@ import { useState } from 'react'
 import logo from './assets/full-logo.png'
 import './App.css'
 import ChatBot from './Chatbot'
+import UserProfile from './components/UserProfile'
 // import ProfilePage from './Profile'
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <UserProfile />
     </>
   )
 }
