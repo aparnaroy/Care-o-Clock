@@ -30,7 +30,11 @@ const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, "../dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist", "index.html"));
+  if (!req.originalUrl.startsWith("/api/")) {
+    res.sendFile(path.join(__dirname, "../dist", "index.html"));
+  } else {
+    res.status(404).json({ message: "API route not found" });
+  }
 });
 
 const PORT = process.env.PORT || 5000;

@@ -3,25 +3,42 @@ import User from "../models/userModel.js";
 
 const router = express.Router();
 
-// Route: GET /api/user/:email
 router.get("/:email", async (req, res) => {
-  try {
-    const user = await User.findOne(
-      { email: req.params.email.toLowerCase() }, // Ensure case-insensitive search
-      {
-        _id: 0, // Exclude _id field from response
-        "medical_profile.legal_name": 1,
-        "medical_profile.dob": 1,
-        "medical_profile.emergency_contact": 1,
-        "medical_profile.medical_conditions": 1,
-      }
-    );
+  console.log(`🔍 Received request for email: ${req.params.email}`);
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+  try {
+    // Check if database connection is actually open
+    if (!User.db || User.db.readyState !== 1) {
+      console.log("❌ Database is not connected!");
+      return res.status(500).json({ message: "Database connection error" });
+    }
+
+    // Log all users to check what is stored
+    const allUsers = await User.find({});
+    console.log("📢 All Users in DB:", allUsers);
+
+    // Log all emails to check for case mismatch
+    const emails = allUsers.map(user => user.email);
+    console.log("📢 Emails in DB:", emails);
+
+    // Log the query we are about to make
+    const queryEmail = req.params.email.toLowerCase();
+    console.log(`🔍 Querying for email: ${queryEmail}`);
+
+    // Run case-insensitive search
+    const user = await User.findOne({ email: new RegExp(`^${queryEmail}$`, "i") });
+
+    // Log the exact response we get from the database
+    console.log(`📢 MongoDB Response:`, user);
+
+    if (!user) {
+      console.log("❌ User not found");
+      return res.status(404).json({ message: "User not found" });
+    }
 
     res.json(user);
   } catch (error) {
-    console.error("Error fetching user:", error);
+    console.error("❌ API Error:", error);
     res.status(500).json({ message: "Server error", error });
   }
 });
