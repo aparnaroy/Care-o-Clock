@@ -19,10 +19,9 @@ const UserProfile = () => {
       <h1>User Profile</h1>
       {user ? (
         <div>
-          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Name:</strong> {user.medical_profile?legal_name}</p>
           <p><strong>Email:</strong> {user.email}</p>
           <p><strong>DOB:</strong> {user.medical_profile?.dob}</p>
-          <p><strong>Provider:</strong> {user.medical_profile?.provider}</p>
         </div>
       ) : (
         <p>Loading user data...</p>
