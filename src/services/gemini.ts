@@ -1,24 +1,25 @@
 import axios from "axios";
-import Tesseract from "tesseract.js";
+// import Tesseract from "tesseract.js";
 
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`;
 
-export const extractTextFromImage = async (imageFile: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    Tesseract.recognize(
-      imageFile,
-      'eng', // Set language to English
-      {
-        logger: (m) => console.log(m), // Optionally log progress
-      }
-    ).then(({ data: { text } }) => {
-      resolve(text); // Return the extracted text
-    }).catch((error) => {
-      console.error("Error extracting text from image:", error);
-      reject("Error extracting text");
-    });
-  });
-};
+// export const extractTextFromImage = async (imageFile: File): Promise<string> => {
+//   const formData = new FormData();
+//   formData.append('file', imageFile);
+//   formData.append('apikey', 'API_KEY'); // Replace with your actual OCR.Space API key
+  
+//   try {
+//     const response = await axios.post('https://api.ocr.space/parse/image', formData, {
+//       headers: { 'Content-Type': 'multipart/form-data' },
+//     });
+
+//     const text = response.data.ParsedResults[0]?.ParsedText || 'No text found';
+//     return text;
+//   } catch (error) {
+//     console.error("Error with OCR.Space API:", error);
+//     throw new Error("Error extracting text from image");
+//   }
+// };
 
 export const fetchGeminiResponse = async (prompt: string): Promise<string> => {
   // Prepend a medical assistant context to ensure Gemini only responds to medical queries

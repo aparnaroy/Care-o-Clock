@@ -1,42 +1,16 @@
-// import { useState } from "react";
-// import { fetchGeminiResponse } from "./services/gemini";
-
-// const ChatBot = () => {
-//   const [prompt, setPrompt] = useState("");
-//   const [response, setResponse] = useState("");
-
-//   const handleSubmit = async () => {
-//     const aiResponse = await fetchGeminiResponse(prompt);
-//     setResponse(aiResponse);
-//   };
-
-//   return (
-//     <div className="p-4">
-//       <h1 className="text-xl font-bold">Gemini AI Chat</h1>
-//       <textarea
-//         className="border p-2 w-full"
-//         placeholder="Ask me anything..."
-//         value={prompt}
-//         onChange={(e) => setPrompt(e.target.value)}
-//       />
-//       <button className="bg-blue-500 text-white p-2 mt-2" onClick={handleSubmit}>
-//         Send
-//       </button>
-//       {response && <p className="mt-4 p-2 border">{response}</p>}
-//     </div>
-//   );
-// };
-
-// export default ChatBot;
 import { useState } from "react";
-import { fetchGeminiResponse, extractTextFromImage } from "./services/gemini";
+import { fetchGeminiResponse /*, extractTextFromImage */ } from "./services/gemini";
 
 const ChatBot = () => {
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
   const [isListening, setIsListening] = useState(false);
-  const [image, setImage] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false); // State to track OCR progress
+  const [loading] = useState(false);
+  // const [image, setImage] = useState<string | null>(null);
+  // const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
+
+  // const videoRef = useRef<HTMLVideoElement | null>(null);
+  // const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // SpeechRecognition setup
   const SpeechRecognition =
@@ -71,29 +45,74 @@ const ChatBot = () => {
     setResponse(aiResponse);
   };
 
-  // Handle image upload and extract text using Tesseract.js
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const file = e.target.files[0];
-      setImage(file);
-      setLoading(true); // Start loading while processing the image
+  // // Start the camera to capture images
+  // const startCamera = async () => {
+  //   try {
+  //     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+  //     setCameraStream(stream);
+  //     if (videoRef.current) {
+  //       videoRef.current.srcObject = stream;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error accessing the camera:", error);
+  //   }
+  // };
 
-      try {
-        // Extract text from the image using Tesseract.js
-        const text = await extractTextFromImage(file);
-        setPrompt(text); // Set the extracted text as the prompt
+  // // Stop the camera to turn off video stream
+  // const stopCamera = () => {
+  //   if (cameraStream) {
+  //     const tracks = cameraStream.getTracks();
+  //     tracks.forEach((track) => track.stop());
+  //   }
+  //   if (videoRef.current) {
+  //     videoRef.current.srcObject = null;
+  //   }
+  //   setCameraStream(null); // Clean up the camera stream state
+  // };
 
-        // Get the Gemini response
-        const aiResponse = await fetchGeminiResponse(text);
-        setResponse(aiResponse);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        setResponse("Error processing the image");
-      } finally {
-        setLoading(false); // Stop loading after processing
-      }
-    }
-  };
+  // // Capture the image from the video feed
+  // const captureImage = async () => {
+  //   if (videoRef.current && canvasRef.current) {
+  //     const context = canvasRef.current.getContext("2d");
+  //     if (context) {
+  //       context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+  //       const dataUrl = canvasRef.current.toDataURL("image/png");
+  //       setImage(dataUrl); // Set the image to show in the UI
+  //       processImage(dataUrl);
+  //     }
+  //   }
+  //   stopCamera(); // Stop the camera after capturing the image
+  // };
+
+  // // Process the captured image
+  // const processImage = async (imageDataUrl: string) => {
+  //   setLoading(true);
+  //   try {
+  //     // Convert the base64 image to a Blob
+  //     const byteArray = atob(imageDataUrl.split(",")[1]);
+  //     const byteArrayBuffer = new ArrayBuffer(byteArray.length);
+  //     const uintArray = new Uint8Array(byteArrayBuffer);
+
+  //     for (let i = 0; i < byteArray.length; i++) {
+  //       uintArray[i] = byteArray.charCodeAt(i);
+  //     }
+
+  //     const file = new File([uintArray], "captured_image.png", { type: "image/png" });
+
+  //     // Extract text from the image using Tesseract.js
+  //     const text = await extractTextFromImage(file);
+  //     setPrompt(text);
+
+  //     // Get the Gemini response
+  //     const aiResponse = await fetchGeminiResponse(text);
+  //     setResponse(aiResponse);
+  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   } catch (error) {
+  //     setResponse("Error processing the image");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="p-4">
@@ -109,7 +128,6 @@ const ChatBot = () => {
           Send
         </button>
 
-        {/* Voice Input Button */}
         <button
           className="bg-green-500 text-white p-2"
           onClick={handleSpeechStart}
@@ -119,17 +137,33 @@ const ChatBot = () => {
         </button>
       </div>
 
-      {/* Image upload button */}
+      {/* Start Camera Button
       <div className="mt-2">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="border p-2"
-        />
-        {image && <p>Image: {image.name}</p>}
-        {loading && <p>Loading...</p>} {/* Show loading while processing */}
+        <button className="bg-yellow-500 text-white p-2" onClick={startCamera}>
+          Start Camera
+        </button>
       </div>
+
+      <div className="mt-2">
+        <video ref={videoRef} autoPlay width="100%" height="auto" />
+      </div>
+
+      Canvas Element to capture the image from the video feed
+      <canvas ref={canvasRef} style={{ display: "none" }} width={640} height={480}></canvas>
+
+      <div className="mt-2">
+        <button className="bg-blue-500 text-white p-2" onClick={captureImage}>
+          Capture Image
+        </button>
+      </div>
+
+      {image && (
+        <div className="mt-2">
+          <img src={image} alt="Captured" width="100%" />
+        </div>
+      )} */}
+
+      {loading && <p>Loading...</p>}
 
       {response && <p className="mt-4 p-2 border">{response}</p>}
     </div>
