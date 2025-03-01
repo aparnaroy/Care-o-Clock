@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import viteLogo from '/vite.svg'
+import logo from './assets/full-logo.png'
 import './App.css'
 import ChatBot from './Chatbot'
 
@@ -10,9 +10,7 @@ function App() {
     <>
       <div>
         <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
+          <img src={logo} className="logo" alt="Vite logo" />
         </a>
       </div>
       <h1>Vite + React</h1>
