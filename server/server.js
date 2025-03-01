@@ -10,23 +10,24 @@ connectDB();
 
 const app = express();
 
-// ✅ FIX: Enable CORS for Railway frontend
+// ✅ FIX: Allow CORS for both local & deployed frontend
 app.use(
   cors({
-    origin: ["https://care-o-clock.up.railway.app", "http://localhost:5173"], // ✅ Allow both production & local frontend
+    origin: ["https://care-o-clock.up.railway.app", "http://localhost:5173"], // 👈 Update with your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // Allow cookies/auth headers if needed
   })
 );
 
 app.use(express.json());
 
-// ✅ API routes
+// ✅ API routes should come before serving the frontend
 app.use("/api/user", userRoutes);
 
 // ✅ Serve React frontend (Only for non-API requests)
 const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "../dist"))); 
+app.use(express.static(path.join(__dirname, "../dist")));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist", "index.html"));
