@@ -9,10 +9,19 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors());
-app.use(express.json()); // ✅ Ensure JSON request/response handling
 
-// ✅ Define API Routes BEFORE serving frontend
+// ✅ FIX: Enable CORS for Railway frontend
+app.use(
+  cors({
+    origin: ["https://care-o-clock.up.railway.app", "http://localhost:5173"], // ✅ Allow both production & local frontend
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
+
+app.use(express.json());
+
+// ✅ API routes
 app.use("/api/user", userRoutes);
 
 // ✅ Serve React frontend (Only for non-API requests)
