@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "/api/user"; // Automatically works for both local & Railway
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/user"; // Use env variable or fallback to local
 
 export const getUserByEmail = async (email: string) => {
   try {
