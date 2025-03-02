@@ -36,7 +36,7 @@ export const fetchGeminiResponse = async (prompt: string): Promise<string> => {
   question for the user to see. Then, 3 percent signs are used to separate the answer from the secret
   command, {b}. Finally, {b} is a string of text that matches one of the following secret commands:
   - "addAppointment:title,datetime,location,additional_info": return this command if the question asks about adding an appointment or gives
-  appointment information. If this command is used, please make {a} be a confirmation/success of 
+  appointment information. Make datetime the actual date and time of the event, assuming today is Sunday, March 2, 2025. If this command is used, please make {a} be a confirmation/success of 
   the appointment being added.
   - "addMedication:name,dose,frequency unit (day or week ONLY),frequency value (e.g. 5 would mean every 5 days/hours),filled_date (otherwise default to today),expiration_date (or when it ends),refills,amount (in the bottle),dates_taken)": return this command if the question asks about adding a medication or gives
   medication information. If this command is used, please make {a} be a confirmation/success of the

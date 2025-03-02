@@ -195,7 +195,7 @@ const MyCalendar = () => {
                         <input type="checkbox" id={`medication-checkbox-${index}`} />
                         <label htmlFor={`medication-checkbox-${index}`}>
                         Take {medication.name} ({medication.dose}) -{" "}
-                        every {medication.frequency.value} {medication.frequency.unit}{medication.frequency.value > 1 ? "s" : ""}{" "}
+                        every {medication.frequency.value} {medication.frequency.unit}
                         </label>
                     </li>
                     ))}
