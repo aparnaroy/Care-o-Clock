@@ -6,7 +6,7 @@ dotenv.config();
 const MONGO_URI = process.env.MONGO_URI || "mongodb://mongo:AcvClPuiOxlAUbxBvWkjYhAmlGqnnTJd@yamanote.proxy.rlwy.net:45608";
 
 // ✅ Ensure database name is explicitly set
-const DB_NAME = "db";  // 👈 Your correct database name
+const DB_NAME = "db";
 
 const connectDB = async () => {
   try {
