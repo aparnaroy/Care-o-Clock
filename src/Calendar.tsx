@@ -51,6 +51,7 @@ const MyCalendar = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
+        console.log(response.data);
         setReminders(response.data);
       } catch (error) {
         console.error("❌ Error fetching user:", error);
