@@ -26,7 +26,7 @@ function App() {
           <Login />
         ) : (
           <>
-            <div style={{ paddingLeft: "20px", paddingRight: "20px" }}>
+            <div style={{ paddingLeft: "0", paddingRight: "0" }}>
               <Home />
               <UserProfile />
             </div>
