@@ -153,7 +153,7 @@ const ChatBot = () => {
               disabled={isListening}
             >
               {/* {isListening ? "Listening..." : "Start Voice Input"} */}
-              <Mic size={24} color="white" />
+              <Mic size={26} color="white" />
             </button>
           </div>
 
