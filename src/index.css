@@ -72,8 +72,9 @@ button:focus-visible {
 
 .profile-icon {
   position: absolute;
-  top: 21px;
-  right: 15px;
+  top: 25px;
+  right: 17px;
+  scale: 1.17;
   cursor: pointer;
 }
 
