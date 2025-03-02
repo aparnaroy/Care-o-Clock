@@ -111,7 +111,11 @@ const ChatBot = () => {
         if (command.startsWith("addAppointment")) {
           try {
             // ✅ Extract values safely
-            const commandParts = command.split(":").slice(1).join(":").split(",");
+            const commandParts = command
+              .split(":")
+              .slice(1)
+              .join(":")
+              .split(",");
 
             if (!commandParts || commandParts.length < 3) {
               throw new Error("❌ Missing required appointment details.");
@@ -149,7 +153,6 @@ const ChatBot = () => {
             // setResponse(`✅ Appointment added: ${response.data.title}`);
           } catch (error) {
             console.error("❌ Error adding appointment:", error);
-            setResponse("⚠️ Failed to add appointment.");
           }
         } else if (command.startsWith("addMedication")) {
           try {
@@ -175,8 +178,7 @@ const ChatBot = () => {
 
             setResponse(`✅ Medication added: ${response.data.name}`);
           } catch (error) {
-            console.error("❌ Error adding medication:", error);
-            setResponse("⚠️ Failed to add medication.");
+            console.log("❌ Error adding medication:", error);
           }
         } else if (command.startsWith("showReminders")) {
           // eslint-disable-next-line prefer-const
@@ -260,9 +262,11 @@ const ChatBot = () => {
             }! ${dayReminders}`
           );
         } else if (command.startsWith("callEmergencyContact")) {
-          setResponse(
-            `${response}<br><br><a href="tel:${user?.medical_profile.emergency_contact.phone_number}">📞 Click here to call your emergency contact (${user?.medical_profile.emergency_contact.name})</a>`
-          );
+          if (!command.includes("Click here to call your emergency contact")) {
+            setResponse(
+              `${response}<br><br><a href="tel:${user?.medical_profile.emergency_contact.phone_number}">📞 Click here to call your emergency contact (${user?.medical_profile.emergency_contact.name})</a>`
+            );
+          }
         }
       };
 
@@ -291,7 +295,10 @@ const ChatBot = () => {
     setIsListening(false);
 
     setCommand("none");
-    const aiResponse = await fetchGeminiResponse(voiceInput, user?.medical_profile.medical_conditions || "");
+    const aiResponse = await fetchGeminiResponse(
+      voiceInput,
+      user?.medical_profile.medical_conditions || ""
+    );
     const [userResponse, aiCommand] = aiResponse.split("%%%");
     setResponse(userResponse);
     setCommand(aiCommand);
@@ -304,7 +311,10 @@ const ChatBot = () => {
 
   const handleSubmit = async () => {
     setCommand("none");
-    const aiResponse = await fetchGeminiResponse(prompt, user?.medical_profile.medical_conditions || "");
+    const aiResponse = await fetchGeminiResponse(
+      prompt,
+      user?.medical_profile.medical_conditions || ""
+    );
     const [userResponse, aiCommand] = aiResponse.split("%%%");
     setResponse(userResponse);
     setCommand(aiCommand);
@@ -392,7 +402,10 @@ const ChatBot = () => {
       setPrompt(text);
 
       // Get the Gemini response
-      const aiResponse = await fetchGeminiResponse(text, user?.medical_profile.medical_conditions || "");
+      const aiResponse = await fetchGeminiResponse(
+        text,
+        user?.medical_profile.medical_conditions || ""
+      );
       setResponse(aiResponse);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
