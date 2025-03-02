@@ -4,15 +4,23 @@ import { authenticateUser } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// ✅ Protected Route: Get User Profile
+// ✅ Debug Log: Check if `/profile` is even being hit
 router.get("/profile", authenticateUser, async (req, res) => {
     try {
-        const user = await User.findById(req.user.userId).select("-hashed_password"); // Exclude password
+        console.log("🔍 Received request at /profile for user ID:", req.user?.userId);
+        console.log("🔍 Full request headers:", req.headers);
 
-        if (!user) return res.status(404).json({ message: "User not found" });
+        const user = await User.findById(req.user?.userId).select("-hashed_password");
 
+        if (!user) {
+            console.log("❌ User not found");
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        console.log("✅ Returning user profile:", user);
         res.json(user);
     } catch (error) {
+        console.error("❌ Server error at /profile:", error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
