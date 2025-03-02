@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { fetchGeminiResponse /*, extractTextFromImage */ } from "./services/gemini";
 import { Mic, Send } from 'lucide-react';
+import cece from "./assets/cece.png";
 
 const ChatBot = () => {
   const [prompt, setPrompt] = useState("");
@@ -171,7 +172,7 @@ const ChatBot = () => {
       {response && <p className="response mt-4 p-2 border">{response} </p>}
 
       <img
-        src="data:image/jpeg;base64,"
+        src={cece}
         alt="Chatbot"
         className="chatbot-img"
       />
