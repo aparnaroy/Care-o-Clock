@@ -106,16 +106,18 @@ const MyCalendar = () => {
   const formattedDate = selectedDate.toISOString().split("T")[0];
 
   // Filter prescriptions by selected date
-  const dayMedications = reminders?.medications.filter(
-    (medication) =>
-      new Date(medication.filled_date) <= new Date(formattedDate) &&
-      new Date(formattedDate) <= new Date(medication.expiration_date)
-  );
+  const dayMedications =
+    reminders?.medications?.filter(
+      (medication) =>
+        new Date(medication.filled_date) <= new Date(formattedDate) &&
+        new Date(formattedDate) <= new Date(medication.expiration_date)
+    ) ?? [];
 
   // Filter appointments by selected date
-  const dayAppointments = reminders?.appointments.filter((appointment) =>
-    appointment.datetime.startsWith(formattedDate)
-  );
+  const dayAppointments =
+    reminders?.appointments?.filter((appointment) =>
+      appointment.datetime.startsWith(formattedDate)
+    ) ?? [];
 
   return (
     <div className="p-4">
@@ -137,7 +139,9 @@ const MyCalendar = () => {
           <button onClick={() => setView("month")}>Select Date</button>
           <h3>Appointments for {selectedDate.toDateString()}:</h3>
           <ul>
-            {dayAppointments && dayMedications && (dayAppointments.length > 0 || dayMedications.length > 0) ? (
+            {dayAppointments &&
+            dayMedications &&
+            (dayAppointments.length > 0 || dayMedications.length > 0) ? (
               <>
                 {/* Render Appointments */}
                 {dayAppointments.map((appointment, index) => (
