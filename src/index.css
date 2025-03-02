@@ -67,9 +67,9 @@ button:focus-visible {
   }
 } */
 
-.logo-container {
+/* .logo-container {
   display: inline-block;
-  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
 
   img {
@@ -79,6 +79,27 @@ button:focus-visible {
     width: 240px;
     height: auto;
   }
+} */
+
+.logo-container {
+  display: inline-block;
+  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+
+  img {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    width: 240px;
+    height: auto;
+  }
+}
+
+.profile-icon {
+  position: absolute;
+  top: 21px;
+  right: 15px;
+  cursor: pointer;
 }
 
 /************** Home Page **************/

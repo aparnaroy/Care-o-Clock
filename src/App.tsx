@@ -4,6 +4,7 @@ import Home from "./Home";
 import UserProfile from "./components/UserProfile";
 import { Login } from "./Login";
 import { useAuth } from "./hooks/useAuth";
+import { FaUserCircle } from 'react-icons/fa';
 
 function App() {
   const user = useAuth();
@@ -12,6 +13,11 @@ function App() {
     <>
       <div className="logo-container">
         <img src={logo} className="logo" alt="Care o'Clock logo" />
+        {user && (
+          <div className="profile-icon">
+            <FaUserCircle size={48} />
+          </div>
+        )}
       </div>
 
       {!user ? <Login /> : (
