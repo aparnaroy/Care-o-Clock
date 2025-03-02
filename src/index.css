@@ -295,6 +295,7 @@ button:focus-visible {
   word-wrap: break-word;
   margin: 10px 0;
   display: inline-block;
+  margin-bottom: 130px;
 }
 
 /* Speech Bubble Tail */

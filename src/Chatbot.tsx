@@ -495,7 +495,7 @@ const ChatBot = () => {
           </div>
         )}
       </div>
-
+      
       {loading && <p>Loading...</p>}
       {response && markdown && (
         <div
