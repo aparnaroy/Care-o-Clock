@@ -22,11 +22,16 @@ interface MedicalProfile {
   medical_conditions: string[];
 }
 
+interface Frequency {
+  value: number;
+  unit: string;
+}
+
 // Medication Type
 interface Medication {
   name: string;
   dose: string;
-  frequency: string;
+  frequency: Frequency;
   filled_date: string;
   expiration_date: string;
   refills: number;
@@ -99,77 +104,141 @@ const ChatBot = () => {
   useEffect(() => {
     if (command !== "none") {
       console.log(`Command: ${command}`);
+
       const handleCommand = async () => {
+        const API_URL =
+          import.meta.env.VITE_API_URL || "https://care-o-clock.up.railway.app";
+
         if (command.startsWith("addAppointment")) {
-          // post data to /api/appointments
-        } else if (command.startsWith("addMedication")) {
-          // post data to /api/medications
-        } else if (command.startsWith("goodMorning")) {
-          // Append reminders for the day
-          let dayReminders = "";
+          try {
+            const appointmentData = {
+              title: "Doctor Visit",
+              datetime: new Date().toISOString(),
+              location: "City Hospital",
+              notes: "Annual check-up",
+            };
 
-          // Get today's date (YYYY-MM-DD format)
-          const today = new Date().toISOString().split("T")[0];
-
-          // Filter today's appointments
-          const dayAppointments =
-            user?.reminders.appointments.filter((appointment) =>
-              appointment.datetime.startsWith(today)
-            ) || [];
-
-          // Filter today's medications (checks full date range)
-          const dayMedications =
-            user?.reminders.medications.filter(
-              (medication) =>
-                new Date(medication.filled_date) <= new Date() &&
-                new Date(medication.expiration_date) >= new Date()
-            ) || [];
-
-          // Combine & Sort Reminders (Use Type Guard for datetime)
-          const combinedReminders = [
-            ...dayAppointments,
-            ...dayMedications,
-          ].sort((a, b) => {
-            const dateA =
-              "datetime" in a ? new Date(a.datetime).getTime() : Infinity;
-            const dateB =
-              "datetime" in b ? new Date(b.datetime).getTime() : Infinity;
-            return dateA - dateB;
-          });
-
-          if (combinedReminders.length > 0) {
-            dayReminders = "<br><br>Here are your reminders for today:<br><br>";
-
-            for (const reminder of combinedReminders) {
-              if ("datetime" in reminder) {
-                // It's an appointment
-                dayReminders += `🗓️ Appointment: ${
-                  reminder.title
-                } at ${new Date(reminder.datetime).toLocaleTimeString()}<ul>`;
-              } else {
-                // It's a medication
-                dayReminders += `<li>💊 Medication: ${reminder.name} - ${reminder.dose}</li>`;
+            const response = await axios.post(
+              `${API_URL}/api/appointments`,
+              appointmentData,
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
               }
-            }
+            );
 
-            dayReminders += "<br>Happy !";
-          } else {
-            dayReminders = "<br><br>No reminders for today!<br><br>";
+            setResponse(`✅ Appointment added: ${response.data.title}`);
+          } catch (error) {
+            console.error("❌ Error adding appointment:", error);
+            setResponse("⚠️ Failed to add appointment.");
+          }
+        } else if (command.startsWith("addMedication")) {
+          try {
+            const medicationData = {
+              name: "Lisinopril",
+              dose: "10mg",
+              frequency: { unit: "hours", value: 12 },
+              filled_date: new Date().toISOString().split("T")[0],
+              expiration_date: "2026-01-20",
+              refills: 2,
+              amount: 90,
+            };
+
+            const response = await axios.post(
+              `${API_URL}/api/medications`,
+              medicationData,
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+              }
+            );
+
+            setResponse(`✅ Medication added: ${response.data.name}`);
+          } catch (error) {
+            console.error("❌ Error adding medication:", error);
+            setResponse("⚠️ Failed to add medication.");
+          }
+        } else if (command.startsWith("goodMorning")) {
+          // eslint-disable-next-line prefer-const
+          let allReminders = [];
+
+          const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+
+          const dayAppointments = user?.reminders?.appointments.filter(
+            (appointment) => appointment.datetime.startsWith(today)
+          ) || [];
+      
+          const dayMedications = user?.reminders?.medications.filter(
+            (medication) =>
+              new Date(medication.filled_date) <= new Date(today) &&
+              new Date(today) <= new Date(medication.expiration_date)
+          ) || [];
+
+          // 🗓️ Add appointments with their time
+          for (const appointment of dayAppointments || []) {
+            allReminders.push({
+              time: new Date(appointment.datetime),
+              details: `🗓️ Appointment: ${appointment.title} at ${appointment.location}`,
+            });
           }
 
-          // Set Response
+          // 💊 Add medications with calculated dose times
+          for (const medication of dayMedications || []) {
+            // eslint-disable-next-line prefer-const
+            let doseTime = new Date();
+            doseTime.setHours(8, 0, 0, 0); // Start at 8 AM
+
+            const frequencyHours = medication.frequency?.value || 24;
+
+            while (doseTime.getHours() < 24) {
+              allReminders.push({
+                time: new Date(doseTime),
+                details: `💊 Medication: ${medication.name} - ${medication.dose}`,
+              });
+
+              doseTime.setHours(doseTime.getHours() + frequencyHours);
+              if (doseTime.getDate() !== new Date().getDate()) break;
+            }
+          }
+
+          // 🔄 Sort all reminders by time
+          allReminders.sort((a, b) => a.time.getTime() - b.time.getTime());
+
+          // 🔹 Generate reminder list
+          let dayReminders =
+            "<br><br>Here are your reminders for today:<br><br><ul>";
+
+          for (const reminder of allReminders) {
+            dayReminders += `<li>${reminder.time.toLocaleTimeString([], {
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
+            })} - ${reminder.details}</li>`;
+          }
+
+          dayReminders += "</ul>";
+
+          // 🗓️ Get current day name
+          const weekday = new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+          });
+
+          dayReminders += `<br>Happy ${weekday}!`;
+
           setResponse(
             `Good morning, ${
               user?.medical_profile.legal_name.split(" ")[0]
             }! ${dayReminders}`
           );
         } else if (command.startsWith("callEmergencyContact")) {
-          // append a link to call their emergency contact
           setResponse(
-            `${response}<br><br><a href="tel:${user?.medical_profile.emergency_contact.phone_number}">Click here to call your emergency contact (${user?.medical_profile.emergency_contact.name})</a>`
+            `${response}<br><br><a href="tel:${user?.medical_profile.emergency_contact.phone_number}">📞 Click here to call your emergency contact (${user?.medical_profile.emergency_contact.name})</a>`
           );
         }
       };
+
       handleCommand();
     }
   }, [command, response, user]);
