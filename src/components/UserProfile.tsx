@@ -33,9 +33,9 @@ const UserProfile = () => {
       }
 
       try {
-        console.log("📢 Sending request to:", `${API_URL}/api/profile`);
+        console.log("📢 Sending request to:", `${API_URL}/api/user/profile`);
 
-        const response = await axios.get(`${API_URL}/api/profile`, {
+        const response = await axios.get(`${API_URL}/api/user/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
