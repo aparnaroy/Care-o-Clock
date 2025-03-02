@@ -294,7 +294,7 @@ const ChatBot = () => {
   return (
     <div>
       <div className="chatbot-container">
-        <h1 className="ask-cece">Ask Cece</h1>
+        <img src={cece} alt="Chatbot" className="chatbot-img" />
         <div className="textarea-container">
           <textarea
             className="textarea-input"
@@ -304,7 +304,7 @@ const ChatBot = () => {
           />
           <div className="button-container">
             <button className="button send-button" onClick={handleSubmit}>
-              <span>Send</span> <Send size={20} />
+              <span>Ask Cece</span> <Send size={20} />
             </button>
             <button
               className="button voice-button"
@@ -350,8 +350,6 @@ const ChatBot = () => {
           dangerouslySetInnerHTML={{ __html: markdown }}
         />
       )}
-
-      <img src={cece} alt="Chatbot" className="chatbot-img" />
     </div>
   );
 };
