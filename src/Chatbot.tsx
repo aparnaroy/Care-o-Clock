@@ -110,15 +110,33 @@ const ChatBot = () => {
 
         if (command.startsWith("addAppointment")) {
           try {
+            // Extract appointment details from the command string
+            const [, title, dateTimeStr, location, additionalInfo = ""] =
+              command.split(":")[1]?.split(",") || [];
+
+            if (!title || !dateTimeStr || !location) {
+              setResponse("⚠️ Missing required appointment details.");
+              return;
+            }
+
+            // Convert natural language date to ISO string
+            const parsedDate = new Date(dateTimeStr); // Improve this with a natural language parser if needed
+            if (isNaN(parsedDate.getTime())) {
+              setResponse("⚠️ Invalid appointment date.");
+              return;
+            }
+
+            // Create appointment object
             const appointmentData = {
-              title: "Doctor Visit",
-              datetime: new Date().toISOString(),
-              location: "City Hospital",
-              notes: "Annual check-up",
+              title: title.trim(),
+              datetime: parsedDate.toISOString(),
+              location: location.trim(),
+              notes: additionalInfo.trim(),
             };
 
+            // Send appointment to backend
             const response = await axios.post(
-              `${API_URL}/api/reminders/appointments`,
+              `${API_URL}/api/appointments`,
               appointmentData,
               {
                 headers: {
@@ -127,7 +145,7 @@ const ChatBot = () => {
               }
             );
 
-            setResponse(`✅ Appointment added: ${response.data.title}`);
+            // setResponse(`✅ Appointment added: ${response.data.title}`);
           } catch (error) {
             console.error("❌ Error adding appointment:", error);
             setResponse("⚠️ Failed to add appointment.");
