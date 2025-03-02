@@ -156,14 +156,31 @@ const ChatBot = () => {
           }
         } else if (command.startsWith("addMedication")) {
           try {
+            const [
+              name,
+              dose,
+              unit,
+              value,
+              filled_date,
+              expiration_date,
+              refills,
+              amount,
+              dates_taken,
+            ] = command.split(":").slice(1).join(":").split(",");
+
             const medicationData = {
-              name: "Lisinopril",
-              dose: "10mg",
-              frequency: { unit: "hours", value: 12 },
-              filled_date: new Date().toISOString().split("T")[0],
-              expiration_date: "2026-01-20",
-              refills: 2,
-              amount: 90,
+              name: name?.trim() || "Amoxicillin", // Default to "Amoxicillin" if empty
+              dose: dose?.trim() || "875 MG", // Default to "875 MG" if empty
+              frequency: {
+                unit: unit?.trim() || "day", // Default to "day" if empty
+                value: value ? parseInt(value, 10) : 1, // Default to every 1 day if empty
+              },
+              filled_date:
+                filled_date?.trim() || new Date().toISOString().split("T")[0], // Default to today
+              expiration_date: expiration_date?.trim() || "2026-01-01", // Default to a future date
+              refills: refills ? parseInt(refills, 10) : 0, // Default to 0 refills if empty
+              amount: amount ? parseInt(amount, 10) : 30, // Default to 30 pills if empty
+              dates_taken: dates_taken ? parseInt(dates_taken, 10) : 0, // Default to 0 if empty
             };
 
             const response = await axios.post(
@@ -178,7 +195,8 @@ const ChatBot = () => {
 
             setResponse(`✅ Medication added: ${response.data.name}`);
           } catch (error) {
-            console.log("❌ Error adding medication:", error);
+            // Catch and log any errors
+            console.log(error);
           }
         } else if (command.startsWith("showReminders")) {
           // eslint-disable-next-line prefer-const
@@ -399,7 +417,10 @@ const ChatBot = () => {
 
       // Extract text from the image using Tesseract.js
       const text = await extractTextFromImage(file);
-      setPrompt(text);
+      setPrompt(
+        "This text is extracted from a medicine bottle. Please use the following data to add a medication reminder: " +
+          text
+      );
 
       // Get the Gemini response
       const aiResponse = await fetchGeminiResponse(
