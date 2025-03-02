@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  fetchGeminiResponse, extractTextFromImage,
-} from "./services/gemini";
+import { fetchGeminiResponse, extractTextFromImage } from "./services/gemini";
 import { Mic, Send, Camera } from "lucide-react";
 import { marked } from "marked";
 import cece from "./assets/cece.png";
@@ -120,7 +118,7 @@ const ChatBot = () => {
             };
 
             const response = await axios.post(
-              `${API_URL}/api/appointments`,
+              `${API_URL}/api/reminders/appointments`,
               appointmentData,
               {
                 headers: {
@@ -167,15 +165,17 @@ const ChatBot = () => {
 
           const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
 
-          const dayAppointments = user?.reminders?.appointments.filter(
-            (appointment) => appointment.datetime.startsWith(today)
-          ) || [];
-      
-          const dayMedications = user?.reminders?.medications.filter(
-            (medication) =>
-              new Date(medication.filled_date) <= new Date(today) &&
-              new Date(today) <= new Date(medication.expiration_date)
-          ) || [];
+          const dayAppointments =
+            user?.reminders?.appointments.filter((appointment) =>
+              appointment.datetime.startsWith(today)
+            ) || [];
+
+          const dayMedications =
+            user?.reminders?.medications.filter(
+              (medication) =>
+                new Date(medication.filled_date) <= new Date(today) &&
+                new Date(today) <= new Date(medication.expiration_date)
+            ) || [];
 
           // 🗓️ Add appointments with their time
           for (const appointment of dayAppointments || []) {
@@ -208,8 +208,7 @@ const ChatBot = () => {
           allReminders.sort((a, b) => a.time.getTime() - b.time.getTime());
 
           // 🔹 Generate reminder list
-          let dayReminders =
-            "<br><br>Here are your reminders for today:<ul>";
+          let dayReminders = "<br><br>Here are your reminders for today:<ul>";
 
           for (const reminder of allReminders) {
             dayReminders += `<li>${reminder.time.toLocaleTimeString([], {
@@ -228,8 +227,18 @@ const ChatBot = () => {
 
           dayReminders += `<br>Happy ${weekday}!`;
 
+          const currentHour = new Date().getHours();
+          const greeting =
+            currentHour < 12
+              ? "Good morning"
+              : currentHour < 18
+              ? "Good afternoon"
+              : "Good evening";
+
           setResponse(
-            `${dayReminders}`
+            `${greeting}, ${
+              user?.medical_profile.legal_name.split(" ")[0]
+            }! ${dayReminders}`
           );
         } else if (command.startsWith("callEmergencyContact")) {
           setResponse(
@@ -321,7 +330,13 @@ const ChatBot = () => {
     if (videoRef.current && canvasRef.current) {
       const context = canvasRef.current.getContext("2d");
       if (context) {
-        context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+        context.drawImage(
+          videoRef.current,
+          0,
+          0,
+          canvasRef.current.width,
+          canvasRef.current.height
+        );
         const dataUrl = canvasRef.current.toDataURL("image/png");
         setImage(dataUrl); // Set the image to show in the UI
         processImage(dataUrl);
@@ -349,7 +364,9 @@ const ChatBot = () => {
         uintArray[i] = byteArray.charCodeAt(i);
       }
 
-      const file = new File([uintArray], "captured_image.png", { type: "image/png" });
+      const file = new File([uintArray], "captured_image.png", {
+        type: "image/png",
+      });
 
       // Extract text from the image using Tesseract.js
       const text = await extractTextFromImage(file);
@@ -358,7 +375,7 @@ const ChatBot = () => {
       // Get the Gemini response
       const aiResponse = await fetchGeminiResponse(text);
       setResponse(aiResponse);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setResponse("Error processing the image");
     } finally {
@@ -389,15 +406,18 @@ const ChatBot = () => {
               <Mic size={26} color="white" />
             </button>
 
-            <button className="button camera-button" onClick={() => {
-              setIsCameraActive(!isCameraActive);
-              if (!isCameraActive) {
-                startCamera();
-              } else {
-                stopCamera();
-              }
-            }}>
-             <Camera size={26} color="white" />
+            <button
+              className="button camera-button"
+              onClick={() => {
+                setIsCameraActive(!isCameraActive);
+                if (!isCameraActive) {
+                  startCamera();
+                } else {
+                  stopCamera();
+                }
+              }}
+            >
+              <Camera size={26} color="white" />
             </button>
           </div>
         </div>
@@ -407,17 +427,21 @@ const ChatBot = () => {
           </div>
         )}
 
-            
         {isCameraActive && (
           <div className="camera-container">
             <video ref={videoRef} autoPlay width="100%" height="auto" />
-            <canvas ref={canvasRef} style={{ display: "none" }} width={640} height={480}></canvas>
+            <canvas
+              ref={canvasRef}
+              style={{ display: "none" }}
+              width={640}
+              height={480}
+            ></canvas>
             <button className="button capture-button" onClick={captureImage}>
               <Camera size={26} color="white" />
             </button>
           </div>
         )}
-       </div> 
+      </div>
 
       {loading && <p>Loading...</p>}
       {response && markdown && (
