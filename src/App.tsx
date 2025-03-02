@@ -4,6 +4,7 @@ import ChatBot from "./Chatbot";
 import UserProfile from "./components/UserProfile";
 import { Login } from "./Login";
 // import ProfilePage from './Profile'
+import MyCalendar from "./Calendar";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Login />
       <ChatBot />
       <UserProfile />
+      <MyCalendar />
     </>
   );
 }
