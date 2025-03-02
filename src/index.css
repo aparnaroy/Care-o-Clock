@@ -118,7 +118,7 @@ button:focus-visible {
 .chatbot-container {
   max-width: 600px;
   margin-top: 30px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   padding-left: 10px;
   padding-right: 10px;
   background: #ffffff;
@@ -151,7 +151,7 @@ button:focus-visible {
 }
 
 .textarea-input {
-  width: 75%;
+  width: 77%;
   height: 70px;
   padding: 12px;
   font-size: 1rem;
@@ -160,7 +160,7 @@ button:focus-visible {
   resize: none;
   outline: none;
   transition: border 0.3s ease;
-  padding-right: 10px; /* Add padding to right for the button */
+  padding-right: 5px; /* Add padding to right for the button */
   margin-right: 100px;
 }
 
@@ -215,6 +215,7 @@ button:focus-visible {
 .button:hover {
   transform: translateY(-2px);
 }
+
 .send-button {
   background-color: #3daf8e;
   color: white;
@@ -288,10 +289,24 @@ button:focus-visible {
 }
 
 .chatbot-img {
+  /* margin-top: 60px; */
   max-width: 100%; /* Ensure it scales properly */
-  height: 120px;
+  height: 170px;
   display: block; /* Remove extra spacing */
   justify-self: center;
+  animation: hover-up-down 2s ease-in-out infinite; /* Apply animation */
+}
+
+@keyframes hover-up-down {
+  0% {
+    transform: translateY(0); /* Initial position */
+  }
+  50% {
+    transform: translateY(15px); /* Move up */
+  }
+  100% {
+    transform: translateY(0); /* Return to initial position */
+  }
 }
 
 
