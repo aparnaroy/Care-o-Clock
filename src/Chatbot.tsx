@@ -136,7 +136,7 @@ const ChatBot = () => {
 
             // Send appointment to backend
             const response = await axios.post(
-              `${API_URL}/api/appointments`,
+              `${API_URL}/api/reminders/appointments`,
               appointmentData,
               {
                 headers: {
