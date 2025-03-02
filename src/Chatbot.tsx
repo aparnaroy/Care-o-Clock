@@ -161,7 +161,7 @@ const ChatBot = () => {
             console.error("❌ Error adding medication:", error);
             setResponse("⚠️ Failed to add medication.");
           }
-        } else if (command.startsWith("showTasks")) {
+        } else if (command.startsWith("showReminders")) {
           // eslint-disable-next-line prefer-const
           let allReminders = [];
 
