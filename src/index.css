@@ -49,10 +49,10 @@ button {
 button:hover {
   border-color: #a2a2a2;
 }
-button:focus,
+/* button:focus,
 button:focus-visible {
-  /* outline: 4px auto -webkit-focus-ring-color; */
-}
+  outline: 4px auto -webkit-focus-ring-color;
+} */
 
 
 /************** Top Bar **************/
@@ -119,6 +119,7 @@ button:focus-visible {
   margin-bottom: 40px;
   padding-left: 10px;
   padding-right: 10px;
+  padding-bottom: 5px;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
@@ -134,7 +135,7 @@ button:focus-visible {
 
 .textarea-input {
   width: 78%;
-  height: 70px;
+  height: 96px;
   padding: 12px;
   font-size: 1rem;
   border: 1px solid #ccc;
@@ -152,14 +153,14 @@ button:focus-visible {
 
 .voice-button {
   position: absolute;
-  bottom: 85px; /* Positioning it at the bottom */
+  bottom: 137px; /* Positioning it at the bottom */
   right: 10px;  /* Positioning it on the right side */
   background-color: #7d89e0;
   color: white;
   border: none;
   border-radius: 50%; /* Makes it circular */
   /* width: 40px; */
-  height: 70px;
+  height: 45px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -175,6 +176,57 @@ button:focus-visible {
   background-color: #bec3e9;
   cursor: not-allowed;
 }
+
+.camera-button {
+  position: absolute;
+  bottom: 85px;  /* Position it below the mic */
+  right: 10px;   /* Align with the mic button */
+  background-color: #7d89e0;
+  color: white;
+  border: none;
+  border-radius: 50%; /* Circular button */
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.camera-button:hover {
+  background-color: #6d77c9;
+}
+
+.capture-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto; /* Center it */
+  background-color: #3daf8e;
+  color: white;
+  border: none;
+  border-radius: 50% !important;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.capture-button:hover {
+  background-color: #318c72;
+}
+
+.captured-image-container {
+  margin-top: 20px;
+  text-align: center;
+}
+.captured-image-container img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
 
 .button-container {
   display: flex;
