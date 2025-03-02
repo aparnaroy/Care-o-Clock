@@ -6,7 +6,7 @@ const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemi
 export const extractTextFromImage = async (imageFile: File): Promise<string> => {
   const formData = new FormData();
   formData.append('file', imageFile);
-  formData.append('apikey', 'THE_API_KEY');
+  formData.append('apikey', `${import.meta.env.VITE_OCR_API_KEY}`);
   
   try {
     const response = await axios.post('https://api.ocr.space/parse/image', formData, {
