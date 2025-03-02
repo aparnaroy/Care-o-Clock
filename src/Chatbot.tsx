@@ -42,9 +42,9 @@ const ChatBot = () => {
     setIsListening(false);
 
     const aiResponse = await fetchGeminiResponse(voiceInput);
-    const [userResponse, command] = aiResponse.split("%%%");
+    const [userResponse, aiCommand] = aiResponse.split("%%%");
     setResponse(userResponse);
-    setCommand(command);
+    setCommand(aiCommand);
     console.log(command);
   };
 
@@ -55,9 +55,9 @@ const ChatBot = () => {
 
   const handleSubmit = async () => {
     const aiResponse = await fetchGeminiResponse(prompt);
-    const [userResponse, command] = aiResponse.split("%%%");
+    const [userResponse, aiCommand] = aiResponse.split("%%%");
     setResponse(userResponse);
-    setCommand(command);
+    setCommand(aiCommand);
     console.log(command);
   };
 
