@@ -35,16 +35,16 @@ export const fetchGeminiResponse = async (prompt: string): Promise<string> => {
   Please format your answer as follows: {a}%%%{b}. {a} represents the answer you provide to the
   question for the user to see. Then, 3 percent signs are used to separate the answer from the secret
   command, {b}. Finally, {b} is a string of text that matches one of the following secret commands:
-  - "addAppointment(title, datetime, location, notes)": return this command if the question asks about adding an appointment or gives
+  - "addAppointment:title,datetime,location,additional_info": return this command if the question asks about adding an appointment or gives
   appointment information. If this command is used, please make {a} be a confirmation/success of 
   the appointment being added.
-  - "addMedication(name, dose, frequency unit (day or week ONLY), frequency value (e.g. 5 would mean every 5 days/weeks), filled_date (otherwise default to today), expiration_date (or when it ends), refills, amount (in the bottle), dates_taken)": return this command if the question asks about adding a medication or gives
+  - "addMedication:name,dose,frequency unit (day or week ONLY),frequency value (e.g. 5 would mean every 5 days/weeks),filled_date (otherwise default to today),expiration_date (or when it ends),refills,amount (in the bottle),dates_taken)": return this command if the question asks about adding a medication or gives
   medication information. If this command is used, please make {a} be a confirmation/success of the
   medication being added.
-  - "goodMorning()": return this command if the question is a greeting (like "good morning") or 
+  - "goodMorning": return this command if the question is a greeting (like "good morning") or 
   asks for daily reminders. If this command is used, please make {a} be a simple greeting followed by
   "Here are your daily reminders:".
-  - "callEmergencyContact()": return this command if the question requires seeking medical attention or
+  - "callEmergencyContact": return this command if the question requires seeking medical attention or
   mentions calling an emergency contact, or mentions severe physical pain or distress.
   - "none": return this command if the question does not match any of the other secret commands.
 

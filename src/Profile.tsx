@@ -3,12 +3,13 @@ import axios from "axios";
 import "./ProfilePage.css";
 import { Box, Flex, Text } from "@chakra-ui/react";
 
-// Define User Type
+// Emergency Contact Type
 interface EmergencyContact {
   name: string;
   phone_number: string;
 }
 
+// Medical Profile Type
 interface MedicalProfile {
   legal_name: string;
   dob: string;
@@ -16,9 +17,37 @@ interface MedicalProfile {
   medical_conditions: string[];
 }
 
+// Medication Type
+interface Medication {
+  name: string;
+  dose: string;
+  frequency: string;
+  filled_date: string;
+  expiration_date: string;
+  refills: number;
+  amount: number;
+  dates_taken: number;
+}
+
+// Appointments Type
+interface Appointment {
+  title: string;
+  datetime: string;
+  location: string;
+  notes: string;
+}
+
+// Reminders Type (Includes Medications & Appointments)
+interface Reminders {
+  medications: Medication[];
+  appointments: Appointment[];
+}
+
+// User Type
 interface User {
   email: string;
   medical_profile: MedicalProfile;
+  reminders: Reminders;
 }
 
 const handleLogout = () => {
