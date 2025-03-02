@@ -9,20 +9,24 @@ import { Box } from "@chakra-ui/react";
 // import { Checkbox } from "@/components/ui/checkbox"
 // import Checkbox from "@/components/ui/Checkbox";
 
+interface Frequency {
+  value: number;
+  unit: string;
+}
+
 interface MedicationReminder {
   name: string;
   dose: string;
-  frequency: string;
+  frequency: Frequency;
   filled_date: string;
   expiration_date: string;
   refills: number;
   amount: number;
-  times_taken: number;
+  dates_taken: number;
 }
 
 interface AppointmentReminder {
-  name: string;
-  doctor: string;
+  title: string;
   datetime: string;
   location: string;
   notes: string;
@@ -179,7 +183,7 @@ const MyCalendar = () => {
                     <li key={`appointment-${index}`}>
                         <input type="checkbox" id={`appointment-checkbox-${index}`} />
                         <label htmlFor={`appointment-checkbox-${index}`}>
-                        {appointment.name} with {appointment.doctor} at{" "}
+                        {appointment.title} at{" "}
                         {appointment.location}
                         </label>
                     </li>
@@ -191,7 +195,7 @@ const MyCalendar = () => {
                         <input type="checkbox" id={`medication-checkbox-${index}`} />
                         <label htmlFor={`medication-checkbox-${index}`}>
                         Take {medication.name} ({medication.dose}) -{" "}
-                        {medication.frequency}
+                        every {medication.frequency.value} {medication.frequency.unit}{medication.frequency.value > 1 ? "s" : ""}{" "}
                         </label>
                     </li>
                     ))}
