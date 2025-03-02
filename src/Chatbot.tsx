@@ -111,7 +111,7 @@ const ChatBot = () => {
         if (command.startsWith("addAppointment")) {
           try {
             // ✅ Extract values safely
-            const commandParts = command.split(":")[1]?.split(",");
+            const commandParts = command.split(":").slice(1).join(":").split(",");
 
             if (!commandParts || commandParts.length < 3) {
               throw new Error("❌ Missing required appointment details.");
