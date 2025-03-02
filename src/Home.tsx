@@ -34,7 +34,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <h1>{ name ? "Welcome, " + name + "!" : "Welcome!" }!</h1>
+      <h1>Welcome{ name ? ", " + name : "" }!</h1>
       <p>How can I help you today?</p>
       <ChatBot />
     </div>
