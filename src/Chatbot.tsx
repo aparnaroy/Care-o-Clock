@@ -6,8 +6,57 @@ import { Mic, Send } from "lucide-react";
 import { marked } from "marked";
 import cece from "./assets/cece.png";
 import DOMPurify from "dompurify";
+import axios from "axios";
+
+// Emergency Contact Type
+interface EmergencyContact {
+  name: string;
+  phone_number: string;
+}
+
+// Medical Profile Type
+interface MedicalProfile {
+  legal_name: string;
+  dob: string;
+  emergency_contact: EmergencyContact;
+  medical_conditions: string[];
+}
+
+// Medication Type
+interface Medication {
+  name: string;
+  dose: string;
+  frequency: string;
+  filled_date: string;
+  expiration_date: string;
+  refills: number;
+  amount: number;
+  dates_taken: number;
+}
+
+// Appointments Type
+interface Appointment {
+  title: string;
+  datetime: string;
+  location: string;
+  notes: string;
+}
+
+// Reminders Type (Includes Medications & Appointments)
+interface Reminders {
+  medications: Medication[];
+  appointments: Appointment[];
+}
+
+// User Type
+interface User {
+  email: string;
+  medical_profile: MedicalProfile;
+  reminders: Reminders;
+}
 
 const ChatBot = () => {
+  const [user, setUser] = useState<User | null>(null);
   const [prompt, setPrompt] = useState("");
   const [command, setCommand] = useState("");
   const [response, setResponse] = useState("");
@@ -19,6 +68,52 @@ const ChatBot = () => {
 
   // const videoRef = useRef<HTMLVideoElement | null>(null);
   // const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const API_URL =
+    import.meta.env.VITE_API_URL || "https://care-o-clock.up.railway.app";
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        console.warn("❌ No token found, user not logged in.");
+        return;
+      }
+
+      try {
+        const response = await axios.get(`${API_URL}/api/user/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setUser(response.data);
+      } catch (error) {
+        console.error("❌ Error fetching user:", error);
+        setUser(null); // Ensures UI updates even if the request fails
+      }
+    };
+
+    fetchUser();
+  }, [API_URL]);
+
+  useEffect(() => {
+    if (command !== "none") {
+      console.log(`Command: ${command}`);
+      const handleCommand = async () => {
+        if (command.startsWith("addAppointment")) {
+          // post data to /api/appointments
+        } else if (command.startsWith("addMedication")) {
+          // post data to /api/medications
+        } else if (command.startsWith("goodMorning")) {
+          // append reminders for the day
+        } else if (command.startsWith("callEmergencyContact")) {
+          // append a link to call their emergency contact
+          setResponse(`${response}<br><br><a href="tel:${user?.medical_profile.emergency_contact.phone_number}">Click here to call your emergency contact (${user?.medical_profile.emergency_contact.name})</a>`);
+        }
+      };
+      handleCommand();
+    }
+  }, [command]);
 
   // SpeechRecognition setup
   const SpeechRecognition =
@@ -41,11 +136,11 @@ const ChatBot = () => {
     setPrompt(voiceInput);
     setIsListening(false);
 
+    setCommand("none");
     const aiResponse = await fetchGeminiResponse(voiceInput);
     const [userResponse, aiCommand] = aiResponse.split("%%%");
     setResponse(userResponse);
     setCommand(aiCommand);
-    console.log(command);
   };
 
   recognition.onerror = (event: { error: unknown }) => {
@@ -54,11 +149,11 @@ const ChatBot = () => {
   };
 
   const handleSubmit = async () => {
+    setCommand("none");
     const aiResponse = await fetchGeminiResponse(prompt);
     const [userResponse, aiCommand] = aiResponse.split("%%%");
     setResponse(userResponse);
     setCommand(aiCommand);
-    console.log(command);
   };
 
   useEffect(() => {
