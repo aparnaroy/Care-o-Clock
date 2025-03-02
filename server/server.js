@@ -19,12 +19,6 @@ app.use(express.json()); // Allows JSON parsing
 app.use("/api", authRoutes); // Authentication routes
 app.use("/api/user", userRoutes); // User-related routes
 
-// ✅ Debug Log: Confirm API requests reach the backend
-app.use("/api/profile", (req, res, next) => {
-  console.log("✅ API Request received at /api/profile");
-  next();
-});
-
 // ✅ Serve React Frontend (Only for non-API requests)
 const __dirname = path.resolve();
 const reactDistPath = path.join(__dirname, "..", "dist");
