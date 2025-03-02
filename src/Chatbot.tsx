@@ -262,7 +262,7 @@ const ChatBot = () => {
             }! ${dayReminders}`
           );
         } else if (command.startsWith("callEmergencyContact")) {
-          if (!command.includes("Click here to call your emergency contact")) {
+          if (!response.includes("Click here to call your emergency contact")) {
             setResponse(
               `${response}<br><br><a href="tel:${user?.medical_profile.emergency_contact.phone_number}">📞 Click here to call your emergency contact (${user?.medical_profile.emergency_contact.name})</a>`
             );
