@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./ProfilePage.css";
 import { Box, Flex, Text } from "@chakra-ui/react";
+import { FaUserCircle } from 'react-icons/fa';
+
 
 // Define User Type
 interface EmergencyContact {
@@ -59,10 +61,10 @@ const Profile = () => {
     <div className="container">
       {/* Name and Avatar Placeholder */}
       <div className="flex-container">
+        <FaUserCircle size={48} />
         <h2 className="name-text">
           {user?.medical_profile?.legal_name || "Loading..."}
         </h2>
-        <div className="avatar"></div>
       </div>
 
       {/* Profile Details */}
