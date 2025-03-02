@@ -23,9 +23,16 @@ const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemi
 
 export const fetchGeminiResponse = async (prompt: string): Promise<string> => {
   // Prepend a medical assistant context to ensure Gemini only responds to medical queries
-  const medicalPrompt = `You are a medical assistant chatbot, and you should only answer questions related to medical topics, 
-      such as symptoms, treatment, diagnosis, medications, health conditions, etc. Please provide a medical answer to the 
-      following question: ${prompt}`;
+  const medicalPrompt = `You are a medical assistant chatbot, and you should only answer questions 
+  related to medical topics, such as symptoms, treatment, diagnosis, medications, health conditions, 
+  etc. Please try to be concise and limit your answer to 10-50 words.  Please provide a medical answer
+  to the following question: ${prompt}.
+  
+  Please format your answer as follows: {a}###{b}. {a} represents the answer you provide to the
+  question for the user to see. Then, 3 hashtags are used to separate the answer from the secret
+  command, {b}. Finally, {b} is a string of text that matches one of the following secret commands:
+  "addAppointment", "addMedication", "goodMorning", "callEmergencyContact".
+  `;
 
   try {
     const response = await axios.post(GEMINI_URL, {
