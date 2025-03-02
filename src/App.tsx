@@ -5,6 +5,7 @@ import UserProfile from "./components/UserProfile";
 import { Login } from "./Login";
 import { useAuth } from "./hooks/useAuth";
 import { FaUserCircle } from 'react-icons/fa';
+import { Center } from "@chakra-ui/react";
 
 function App() {
   const user = useAuth();
@@ -20,14 +21,18 @@ function App() {
         )}
       </div>
 
-      {!user ? <Login /> : (
-        <>
-          <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-            <Home />
-            <UserProfile />
-          </div>
-        </>
-      )}
+      <Center style={{ margin: "0 auto" }}>
+        {!user ? (
+          <Login />
+        ) : (
+          <>
+            <div style={{ paddingLeft: "20px", paddingRight: "20px" }}>
+              <Home />
+              <UserProfile />
+            </div>
+          </>
+        )}
+      </Center>
     </>
   );
 }

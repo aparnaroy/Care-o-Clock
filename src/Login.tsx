@@ -36,7 +36,6 @@ export function Login() {
       if (token) {
         localStorage.setItem("token", token); // ✅ Store token
         window.dispatchEvent(new Event("storage")); // ✅ Refresh `useAuth`
-        alert("Login successful!");
         window.location.reload(); // ✅ Reload to reflect auth state (optional)
       }
     } catch (error: unknown) {
@@ -75,7 +74,6 @@ export function Login() {
       if (token) {
         localStorage.setItem("token", token); // ✅ Store token
         window.dispatchEvent(new Event("storage")); // ✅ Refresh `useAuth`
-        alert("Signup successful! Welcome, " + response.data.user.fullName);
         window.location.reload(); // ✅ Reload to reflect auth state (optional)
       }
     } catch (error: unknown) {
