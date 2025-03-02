@@ -19,13 +19,27 @@ app.use(express.json()); // Allows JSON parsing
 app.use("/api", authRoutes); // Authentication routes
 app.use("/api/user", userRoutes); // User-related routes
 
+// ✅ Debug Log: Confirm API requests reach the backend
+app.use("/api/profile", (req, res, next) => {
+  console.log("✅ API Request received at /api/profile");
+  next();
+});
+
 // ✅ Serve React Frontend (Only for non-API requests)
 const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "../dist")));
+const reactDistPath = path.join(__dirname, "..", "dist");
+
+app.use(express.static(reactDistPath));
 
 app.get("*", (req, res) => {
   console.log("🚨 Frontend request intercepted:", req.originalUrl);
-  res.sendFile(path.join(__dirname, "../dist", "index.html"));
+  
+  // ✅ Ensure index.html exists before serving (avoids errors)
+  if (!path.join(reactDistPath, "index.html")) {
+    return res.status(404).send("Frontend not found");
+  }
+
+  res.sendFile(path.join(reactDistPath, "index.html"));
 });
 
 // ✅ Start Server
