@@ -12,7 +12,7 @@ const NavBar = ({ setCurrentPage }: { setCurrentPage: (page: Page) => void }) =>
       </div>
       <div className="nav-right">
         <button className="nav-button" onClick={() => setCurrentPage(Page.Calendar)}>
-          <Calendar size={24} />
+          <Calendar size={24}></Calendar>
           <span className="text-sm">Calendar</span>
         </button>
       </div>
