@@ -22,7 +22,7 @@ interface User {
 
 const handleLogout = () => {
   localStorage.removeItem("token");
-  window.dispatchEvent(new Event("storage")); // ✅ Forces useAuth to re-check
+  window.dispatchEvent(new Event("storage"));
 };
 
 const Profile = () => {
@@ -40,13 +40,10 @@ const Profile = () => {
       }
 
       try {
-        console.log("📢 Sending request to:", `${API_URL}/api/user/profile`);
-
         const response = await axios.get(`${API_URL}/api/user/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        console.log("✅ Server Response:", response.data);
         setUser(response.data);
       } catch (error) {
         console.error("❌ Error fetching user:", error);
@@ -55,8 +52,8 @@ const Profile = () => {
     };
 
     fetchUser();
-  }, [API_URL]); // ✅ Include API_URL as a dependency
-
+  }, [API_URL]);
+  
   return (
     <div className="container">
       {/* Name and Avatar Placeholder */}
