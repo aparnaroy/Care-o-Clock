@@ -1,16 +1,13 @@
 // import { useState } from 'react';
-import logo from './assets/full-logo.png';
 import './App.css';
 import ChatBot from './Chatbot';
 import NavBar from './NavBar';
 
 const Home = () => {
     return (
-        <div>
-            <a href="https://vite.dev" target="_blank">
-                <img src={logo} className="logo" alt="Vite logo" />
-            </a>
-        
+        <div className="home-container">
+            <h1>Welcome, NAME!</h1>
+            <p>How can I help you today?</p>
             <ChatBot/>
             <NavBar/>
         </div>

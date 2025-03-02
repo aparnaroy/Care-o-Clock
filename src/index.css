@@ -24,7 +24,7 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
+  /* display: flex; */
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
@@ -54,7 +54,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
+/* @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -65,4 +65,310 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+} */
+
+/* .logo-container {
+  display: inline-block;
+  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+
+  img {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    width: 240px;
+    height: auto;
+  }
+} */
+
+.logo-container {
+  display: inline-block;
+  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+
+  img {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    width: 240px;
+    height: auto;
+  }
+}
+
+.profile-icon {
+  position: absolute;
+  top: 21px;
+  right: 15px;
+  cursor: pointer;
+}
+
+/************** Home Page **************/
+.home-container {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100vh; /* Full height */
+  padding: 10px;
+
+  h1 {
+    font-size: 2.4rem;
+    line-height: 1.2em;
+    color: #333;
+    padding-top: 30px;
+  }
+  
+  p {
+    font-size: 1.3rem;
+    margin-top: 15px;
+    margin-bottom: 20px;
+  }
+}
+
+
+/************** Chatbot Component **************/
+.ask-cece {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.2em;
+  color: #717171;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.chatbot-container {
+  max-width: 600px;
+  margin-top: 30px;
+  margin-bottom: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* 
+.textarea-input {
+  width: 100%;
+  height: 70px;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: none;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+.textarea-input:focus {
+  border-color: #5691d6;
+} */
+
+.textarea-container {
+  position: relative; /* Positioning context for the button */
+  padding-left: 10px;
+}
+
+.textarea-input {
+  width: 77%;
+  height: 70px;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: none;
+  outline: none;
+  transition: border 0.3s ease;
+  padding-right: 5px; /* Add padding to right for the button */
+  margin-right: 100px;
+}
+
+.textarea-input {
+  resize: vertical;
+}
+
+.voice-button {
+  position: absolute;
+  bottom: 85px; /* Positioning it at the bottom */
+  right: 10px;  /* Positioning it on the right side */
+  background-color: #7d89e0;
+  color: white;
+  border: none;
+  border-radius: 50%; /* Makes it circular */
+  /* width: 40px; */
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.voice-button:hover {
+  background-color: #6d77c9;
+}
+
+.voice-button:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+  padding-bottom: 20px;
+}
+
+.button {
+  padding: 10px 16px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.send-button {
+  background-color: #3daf8e;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Add space between the text and icon */
+}
+
+.send-button span {
+  font-size: 1rem;
+}
+
+.send-button:hover {
+  background-color: #318c72;
+}
+
+.send-button svg {
+  /* Optional: Adjust the icon size or color */
+  color: white;
+}
+/* 
+.voice-button {
+  background-color: #7d89e0;
+  color: white;
+}
+
+.voice-button:hover {
+  background-color: #6d77c9;
+}
+
+.voice-button:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+} */
+
+.response-box {
+  padding: 12px;
+  background: #f9f9f9;
+  border-left: 5px solid #5691d6;
+  border-radius: 8px;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+.response {
+  position: relative;
+  max-width: 90%;
+  background: #f1f1f1;
+  color: #333;
+  padding: 12px 16px;
+  font-size: 1.2rem !important;
+  border-radius: 18px;
+  text-align: left;
+  word-wrap: break-word;
+  margin: 10px 0;
+  display: inline-block;
+}
+
+/* Speech Bubble Tail */
+.response::after {
+  content: "";
+  position: absolute;
+  bottom: -10px; /* Adjusts placement */
+  left: 20px; /* Moves tail to left */
+  width: 0;
+  height: 0;
+  border-top: 10px solid #f1f1f1;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+}
+
+.chatbot-img {
+  /* margin-top: 60px; */
+  max-width: 100%; /* Ensure it scales properly */
+  height: 170px;
+  display: block; /* Remove extra spacing */
+  justify-self: center;
+  animation: hover-up-down 2s ease-in-out infinite; /* Apply animation */
+}
+
+@keyframes hover-up-down {
+  0% {
+    transform: translateY(0); /* Initial position */
+  }
+  50% {
+    transform: translateY(15px); /* Move up */
+  }
+  100% {
+    transform: translateY(0); /* Return to initial position */
+  }
+}
+
+
+/************** Navbar Component **************/
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  background-color: #7d89e0;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Left side of the navbar */
+.nav-left,
+.nav-right {
+  flex: 1; /* Take up equal space */
+  display: flex;
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically */
+}
+
+/* Style for the button */
+.nav-button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 25px;
+}
+
+.nav-button:hover {
+  opacity: 0.8;
+}
+
+/* Optional: add styles for the icons and text */
+.text-sm {
+  font-size: 14px;
 }
