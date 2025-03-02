@@ -8,6 +8,7 @@ import "react-calendar/dist/Calendar.css";
 import { Box } from "@chakra-ui/react";
 // import { Checkbox } from "@/components/ui/checkbox"
 // import Checkbox from "@/components/ui/Checkbox";
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 interface Frequency {
   value: number;
@@ -163,14 +164,16 @@ const MyCalendar = () => {
                     alignItems: "center",
                     }}
                 >
-                    <button onClick={handlePrevDay} style={{ backgroundColor: '#7d89e0', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}>
-                        Previous Day ←
+                    <button onClick={handlePrevDay} style={{ backgroundColor: '#7d89e0', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' , display: 'inline-flex', alignItems: 'center', }}>
+                        <FaChevronLeft/>
+                        <span style={{ marginLeft: '5px' }}>Previous Day</span>
                     </button>
                     <Box padding="20px">
                         <h2>{selectedDate.toDateString()}</h2>
                     </Box>
-                    <button onClick={handleNextDay} style={{ backgroundColor: '#7d89e0', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}>
-                        → Next Day
+                    <button onClick={handleNextDay} style={{ backgroundColor: '#7d89e0', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' , display: 'inline-flex', alignItems: 'center', }}>
+                        <span style={{ marginRight: '5px' }}>Next Day</span>
+                        <FaChevronRight/>
                     </button>
                 </div>
             <Box padding="20px">
