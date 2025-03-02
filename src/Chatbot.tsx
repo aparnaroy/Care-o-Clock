@@ -145,12 +145,14 @@ const ChatBot = () => {
                 // It's an appointment
                 dayReminders += `🗓️ Appointment: ${
                   reminder.title
-                } at ${new Date(reminder.datetime).toLocaleTimeString()}<br>`;
+                } at ${new Date(reminder.datetime).toLocaleTimeString()}<ul>`;
               } else {
                 // It's a medication
-                dayReminders += `💊 Medication: ${reminder.name} - ${reminder.dose}<br>`;
+                dayReminders += `<li>💊 Medication: ${reminder.name} - ${reminder.dose}</li>`;
               }
             }
+
+            dayReminders += "<br>Happy !";
           } else {
             dayReminders = "<br><br>No reminders for today!<br><br>";
           }
