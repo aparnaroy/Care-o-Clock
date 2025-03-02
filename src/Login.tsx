@@ -21,7 +21,7 @@ export function Login() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     try {
       const response = await axios.post(
         "https://care-o-clock.up.railway.app/api/login",
@@ -30,19 +30,24 @@ export function Login() {
           password,
         }
       );
-
-      alert("Login successful! Token: " + response.data.token);
+  
+      const token = response.data.token;
+  
+      if (token) {
+        localStorage.setItem("token", token); // ✅ Store token
+        window.dispatchEvent(new Event("storage")); // ✅ Refresh `useAuth`
+        alert("Login successful!");
+        window.location.reload(); // ✅ Reload to reflect auth state (optional)
+      }
     } catch (error: unknown) {
       let errorMessage = "Something went wrong";
-
+  
       if (axios.isAxiosError(error)) {
-        // ✅ If it's an Axios error, check response data
         errorMessage = error.response?.data?.message || error.message;
       } else if (error instanceof Error) {
-        // ✅ If it's a standard JS Error, use message
         errorMessage = error.message;
       }
-
+  
       console.error("Login failed:", errorMessage);
       alert("Login failed: " + errorMessage);
     }
@@ -50,7 +55,7 @@ export function Login() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     try {
       const response = await axios.post(
         "https://care-o-clock.up.railway.app/api/signup",
@@ -64,23 +69,28 @@ export function Login() {
           password,
         }
       );
-
-      alert("Signup successful! Welcome, " + response.data.user.fullName);
+  
+      const token = response.data.token;
+  
+      if (token) {
+        localStorage.setItem("token", token); // ✅ Store token
+        window.dispatchEvent(new Event("storage")); // ✅ Refresh `useAuth`
+        alert("Signup successful! Welcome, " + response.data.user.fullName);
+        window.location.reload(); // ✅ Reload to reflect auth state (optional)
+      }
     } catch (error: unknown) {
       let errorMessage = "Something went wrong";
-
+  
       if (axios.isAxiosError(error)) {
-        // ✅ If it's an Axios error, check response data
         errorMessage = error.response?.data?.message || error.message;
       } else if (error instanceof Error) {
-        // ✅ If it's a standard JS Error, use message
         errorMessage = error.message;
       }
-
+  
       console.error("Signup failed:", errorMessage);
       alert("Signup failed: " + errorMessage);
     }
-  };
+  };  
 
   return (
     <ChakraProvider value={defaultSystem}>
