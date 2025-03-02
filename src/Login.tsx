@@ -184,7 +184,7 @@ export function Login() {
               </Field.Root>
 
               <Button type="submit" alignSelf="flex-start">
-                Log In!
+                Register!
               </Button>
             </form>
           </Tabs.Content>
