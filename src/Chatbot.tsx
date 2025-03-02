@@ -9,6 +9,7 @@ import DOMPurify from "dompurify";
 
 const ChatBot = () => {
   const [prompt, setPrompt] = useState("");
+  const [command, setCommand] = useState("");
   const [response, setResponse] = useState("");
   const [markdown, setMarkdown] = useState("");
   const [isListening, setIsListening] = useState(false);
@@ -41,7 +42,10 @@ const ChatBot = () => {
     setIsListening(false);
 
     const aiResponse = await fetchGeminiResponse(voiceInput);
-    setResponse(aiResponse);
+    const [userResponse, command] = aiResponse.split("%%%");
+    setResponse(userResponse);
+    setCommand(command);
+    console.log(command);
   };
 
   recognition.onerror = (event: { error: unknown }) => {
@@ -51,7 +55,10 @@ const ChatBot = () => {
 
   const handleSubmit = async () => {
     const aiResponse = await fetchGeminiResponse(prompt);
-    setResponse(aiResponse);
+    const [userResponse, command] = aiResponse.split("%%%");
+    setResponse(userResponse);
+    setCommand(command);
+    console.log(command);
   };
 
   useEffect(() => {
