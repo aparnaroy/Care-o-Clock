@@ -192,6 +192,3 @@ const ChatBot = () => {
 };
 
 export default ChatBot;
-function useEffect(arg0: () => void, arg1: string[]) {
-  throw new Error("Function not implemented.");
-}
