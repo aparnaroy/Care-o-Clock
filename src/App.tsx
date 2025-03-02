@@ -19,7 +19,7 @@ function App() {
   return (
     <>
       <div className="logo-container">
-        <img src={logo} className="logo" alt="Care o'Clock logo"  />
+        <img src={logo} className="logo" alt="Care o'Clock logo" onClick={() => setCurrPage(Page.Home)}  />
         {user && (
           <div className="profile-icon" onClick={() => setCurrPage(Page.Profile)}>
             <FaUserCircle size={48} />
