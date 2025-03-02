@@ -5,6 +5,7 @@ import {
 import { Mic, Send } from "lucide-react";
 import { marked } from "marked";
 import cece from "./assets/cece.png";
+import DOMPurify from "dompurify";
 
 const ChatBot = () => {
   const [prompt, setPrompt] = useState("");
@@ -56,7 +57,7 @@ const ChatBot = () => {
   useEffect(() => {
     const convertMarkdown = async () => {
       const html = await marked(response);
-      setMarkdown(html); 
+      setMarkdown(DOMPurify.sanitize(html));
     };
 
     convertMarkdown();
@@ -184,7 +185,12 @@ const ChatBot = () => {
         </div>
       </div>
       {loading && <p>Loading...</p>}
-      {response && markdown && <p className="response mt-4 p-2 border">{markdown} </p>}
+      {response && markdown && (
+        <div
+          className="response mt-4 p-2 border"
+          dangerouslySetInnerHTML={{ __html: markdown }}
+        />
+      )}
 
       <img src={cece} alt="Chatbot" className="chatbot-img" />
     </div>
