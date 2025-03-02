@@ -20,9 +20,15 @@ interface User {
   medical_profile: MedicalProfile;
 }
 
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  window.dispatchEvent(new Event("storage")); // ✅ Forces useAuth to re-check
+};
+
 const Profile = () => {
   const [user, setUser] = useState<User | null>(null);
-  const API_URL = import.meta.env.VITE_API_URL || "https://care-o-clock.up.railway.app";
+  const API_URL =
+    import.meta.env.VITE_API_URL || "https://care-o-clock.up.railway.app";
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -55,7 +61,9 @@ const Profile = () => {
     <div className="container">
       {/* Name and Avatar Placeholder */}
       <div className="flex-container">
-        <h2 className="name-text">{user?.medical_profile?.legal_name || "Loading..."}</h2>
+        <h2 className="name-text">
+          {user?.medical_profile?.legal_name || "Loading..."}
+        </h2>
         <div className="avatar"></div>
       </div>
 
@@ -63,7 +71,9 @@ const Profile = () => {
       <div className="profile-box">
         <div className="profile-detail">
           <p className="detail-title">DOB:</p>
-          <div className="placeholder">{user?.medical_profile?.dob || "Loading..."}</div>
+          <div className="placeholder">
+            {user?.medical_profile?.dob || "Loading..."}
+          </div>
         </div>
 
         <div className="profile-detail">
@@ -86,7 +96,7 @@ const Profile = () => {
       </div>
 
       {/* Sign Out Button */}
-      <button className="sign-out-button" onClick={() => localStorage.removeItem("token")}>
+      <button className="sign-out-button" onClick={handleLogout}>
         SIGN OUT
       </button>
     </div>
