@@ -1,24 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // import logo from './assets/full-logo.png'
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { Box } from "@chakra-ui/react";
+// import { Checkbox } from "@/components/ui/checkbox"
+// import Checkbox from "@/components/ui/Checkbox";
+
+interface Frequency {
+  value: number;
+  unit: string;
+}
 
 interface MedicationReminder {
   name: string;
   dose: string;
-  frequency: string;
+  frequency: Frequency;
   filled_date: string;
   expiration_date: string;
   refills: number;
   amount: number;
-  times_taken: number;
+  dates_taken: number;
 }
 
 interface AppointmentReminder {
-  name: string;
-  doctor: string;
+  title: string;
   datetime: string;
   location: string;
   notes: string;
@@ -30,36 +38,39 @@ interface Reminders {
 }
 
 const MyCalendar = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [view, setView] = useState("month");
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [view, setView] = useState("month");
 
-  const [reminders, setReminders] = useState<Reminders | null>(null);
-  const API_URL =
-    import.meta.env.VITE_API_URL || "https://care-o-clock.up.railway.app";
+    const [reminders, setReminders] = useState<Reminders | null>(null);
+    const API_URL =
+        import.meta.env.VITE_API_URL || "https://care-o-clock.up.railway.app";
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
+    // const [checkedAppointments, setCheckedAppointments] = useState<boolean[]>([]);
+    // const [checkedMedications, setCheckedMedications] = useState<boolean[]>([]);
 
-      if (!token) {
-        console.warn("❌ No token found, user not logged in.");
-        return;
-      }
+    useEffect(() => {
+        const fetchUser = async () => {
+        const token = localStorage.getItem("token");
 
-      try {
-        const response = await axios.get(`${API_URL}/api/user/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        if (!token) {
+            console.warn("❌ No token found, user not logged in.");
+            return;
+        }
 
-        setReminders(response.data.reminders);
-      } catch (error) {
-        console.error("❌ Error fetching user:", error);
-        setReminders(null); // Ensures UI updates even if the request fails
-      }
-    };
+        try {
+            const response = await axios.get(`${API_URL}/api/user/profile`, {
+            headers: { Authorization: `Bearer ${token}` },
+            });
 
-    fetchUser();
-  }, [API_URL]);
+            setReminders(response.data.reminders);
+        } catch (error) {
+            console.error("❌ Error fetching user:", error);
+            setReminders(null); // Ensures UI updates even if the request fails
+        }
+        };
+
+        fetchUser();
+    }, [API_URL]);
 
   // Mock reminders data
   // const [reminders] = useState<Reminders>({
@@ -86,97 +97,133 @@ const MyCalendar = () => {
   //   ],
   // });
 
-  const handleDateChange = (date: Date) => {
-    setSelectedDate(date);
-    setView("day");
-  };
+    const handleDateChange = (date: Date) => {
+        setSelectedDate(date);
+        setView("day");
+    };
 
-  const handlePrevDay = () => {
-    const prevDay = new Date(selectedDate);
-    prevDay.setDate(selectedDate.getDate() - 1);
-    setSelectedDate(prevDay);
-  };
+    const handlePrevDay = () => {
+        const prevDay = new Date(selectedDate);
+        prevDay.setDate(selectedDate.getDate() - 1);
+        setSelectedDate(prevDay);
+    };
 
-  const handleNextDay = () => {
-    const nextDay = new Date(selectedDate);
-    nextDay.setDate(selectedDate.getDate() + 1);
-    setSelectedDate(nextDay);
-  };
+    const handleNextDay = () => {
+        const nextDay = new Date(selectedDate);
+        nextDay.setDate(selectedDate.getDate() + 1);
+        setSelectedDate(nextDay);
+    };
 
-  const formattedDate = selectedDate.toISOString().split("T")[0];
+    const formattedDate = selectedDate.toISOString().split("T")[0];
 
-  // Filter prescriptions by selected date
-  const dayMedications =
-    reminders?.medications?.filter(
-      (medication) =>
+    // Filter prescriptions by selected date
+    const dayMedications = reminders?.medications?.filter((medication) =>
         new Date(medication.filled_date) <= new Date(formattedDate) &&
         new Date(formattedDate) <= new Date(medication.expiration_date)
     ) ?? [];
 
-  // Filter appointments by selected date
-  const dayAppointments =
-    reminders?.appointments?.filter((appointment) =>
-      appointment.datetime.startsWith(formattedDate)
+    // Filter appointments by selected date
+    const dayAppointments = reminders?.appointments?.filter((appointment) =>
+        appointment.datetime.startsWith(formattedDate)
     ) ?? [];
 
-  return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold">Calendar</h1>
+    // useEffect(() => {
+    //     setCheckedAppointments(Array(dayAppointments.length).fill(false));
+    //     setCheckedMedications(Array(dayMedications.length).fill(false));
+    // }, [dayAppointments, dayMedications]);
 
-      {view === "day" ? (
-        <div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <button onClick={handlePrevDay}>Previous Day</button>
-            <h2>{selectedDate.toDateString()}</h2>
-            <button onClick={handleNextDay}>Next Day</button>
-          </div>
-          <button onClick={() => setView("month")}>Select Date</button>
-          <h3>Appointments for {selectedDate.toDateString()}:</h3>
-          <ul>
-            {dayAppointments &&
-            dayMedications &&
-            (dayAppointments.length > 0 || dayMedications.length > 0) ? (
-              <>
-                {/* Render Appointments */}
-                {dayAppointments.map((appointment, index) => (
-                  <li key={`appointment-${index}`}>
-                    {appointment.name} with {appointment.doctor} at{" "}
-                    {appointment.location}
-                  </li>
-                ))}
+    // const handleAppointmentCheckboxChange = (index: number) => {
+    //     const newCheckedAppointments = [...checkedAppointments];
+    //     newCheckedAppointments[index] = !newCheckedAppointments[index];
+    //     setCheckedAppointments(newCheckedAppointments);
+    // };
 
-                {/* Render Medications */}
-                {dayMedications.map((medication, index) => (
-                  <li key={`medication-${index}`}>
-                    Take {medication.name} ({medication.dose}) -{" "}
-                    {medication.frequency}
-                  </li>
-                ))}
-              </>
-            ) : (
-              <li>No appointments or medications for this day.</li>
-            )}
-          </ul>
+    // const handleMedicationCheckboxChange = (index: number) => (
+    //     event: React.ChangeEvent<HTMLInputElement>
+    //   ) => {
+    //     const newCheckedMedications = [...checkedMedications];
+    //     newCheckedMedications[index] = event.target.checked; // Use event.target.checked
+    //     setCheckedMedications(newCheckedMedications);
+    //   };
+
+
+    return (
+        <div className="p-4">
+            <br></br>
+            <h1 className="text-xl font-bold">Calendar</h1>
+            <br></br>
+
+        {view === "day" ? (
+            <div>
+                <button onClick={() => setView("month")} style={{ color: 'white' }}>Month View</button>
+                <div
+                    style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    }}
+                >
+                    <button onClick={handlePrevDay} style={{ backgroundColor: '#7d89e0', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}>
+                        Previous Day ←
+                    </button>
+                    <Box padding="20px">
+                        <h2>{selectedDate.toDateString()}</h2>
+                    </Box>
+                    <button onClick={handleNextDay} style={{ backgroundColor: '#7d89e0', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}>
+                        → Next Day
+                    </button>
+                </div>
+            <Box padding="20px">
+                <h2><b>Appointments / Medications for {selectedDate.toDateString()}:</b></h2>
+            </Box>
+
+            <ul>
+                {dayAppointments &&
+                dayMedications &&
+                (dayAppointments.length > 0 || dayMedications.length > 0) ? (
+                <>
+                    {/* Render Appointments */}
+                    {dayAppointments.map((appointment, index) => (
+                    <li key={`appointment-${index}`}>
+                        <input type="checkbox" id={`appointment-checkbox-${index}`} />
+                        <label htmlFor={`appointment-checkbox-${index}`}>
+                        {" "}{appointment.title} at{" "}
+                        {appointment.location}
+                        </label>
+                    </li>
+                    ))}
+
+                    {/* Render Medications */}
+                    {dayMedications.map((medication, index) => (
+                    <li key={`medication-${index}`}>
+                        <input type="checkbox" id={`medication-checkbox-${index}`} />
+                        <label htmlFor={`medication-checkbox-${index}`}>
+                        {" "}Take {medication.name} ({medication.dose}) -{" "}
+                        every {medication.frequency.value} {medication.frequency.unit}{medication.frequency.value > 1 ? "s" : ""}{" "}
+                        </label>
+                    </li>
+                    ))}
+                </>
+                ) : (
+                <li>No appointments or medications for this day.</li>
+                )}
+            </ul>
+            </div>
+        ) : (
+            <div>
+                <Box padding="20px">
+                    <button onClick={() => setView("day")} style={{ color: 'white' }}>Day View</button>
+                </Box>
+                <Calendar
+                    onClickDay={handleDateChange}
+                    value={selectedDate}
+                    maxDetail="month"
+                    minDetail="month"
+                />
+            </div>
+        )}
         </div>
-      ) : (
-        <div>
-          <button onClick={() => setView("day")}>Back to Day View</button>
-          <Calendar
-            onClickDay={handleDateChange}
-            value={selectedDate}
-            maxDetail="month"
-            minDetail="month"
-          />
-        </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default MyCalendar;

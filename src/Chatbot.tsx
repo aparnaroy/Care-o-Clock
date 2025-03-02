@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  fetchGeminiResponse, extractTextFromImage,
-} from "./services/gemini";
+import { fetchGeminiResponse, extractTextFromImage } from "./services/gemini";
 import { Mic, Send, Camera } from "lucide-react";
 import { marked } from "marked";
 import cece from "./assets/cece.png";
@@ -19,14 +17,19 @@ interface MedicalProfile {
   legal_name: string;
   dob: string;
   emergency_contact: EmergencyContact;
-  medical_conditions: string[];
+  medical_conditions: string | undefined;
+}
+
+interface Frequency {
+  value: number;
+  unit: string;
 }
 
 // Medication Type
 interface Medication {
   name: string;
   dose: string;
-  frequency: string;
+  frequency: Frequency;
   filled_date: string;
   expiration_date: string;
   refills: number;
@@ -100,75 +103,169 @@ const ChatBot = () => {
   useEffect(() => {
     if (command !== "none") {
       console.log(`Command: ${command}`);
+
       const handleCommand = async () => {
+        const API_URL =
+          import.meta.env.VITE_API_URL || "https://care-o-clock.up.railway.app";
+
         if (command.startsWith("addAppointment")) {
-          // post data to /api/appointments
+          try {
+            // ✅ Extract values safely
+            const commandParts = command.split(":")[1]?.split(",");
+
+            if (!commandParts || commandParts.length < 3) {
+              throw new Error("❌ Missing required appointment details.");
+            }
+
+            const [title, datetime, location, notes = ""] = commandParts.map(
+              (part) => part.trim()
+            );
+
+            // ✅ Ensure required fields are present
+            if (!title || !datetime || !location) {
+              throw new Error("❌ Missing required appointment details.");
+            }
+
+            // ✅ Construct appointment payload
+            const appointmentData = {
+              title,
+              datetime: new Date(datetime).toISOString(), // Convert to ISO format
+              location,
+              notes, // Optional
+            };
+
+            // Send appointment to backend
+            const response = await axios.post(
+              `${API_URL}/api/appointments`,
+              appointmentData,
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+              }
+            );
+
+            console.log(response);
+            // setResponse(`✅ Appointment added: ${response.data.title}`);
+          } catch (error) {
+            console.error("❌ Error adding appointment:", error);
+            setResponse("⚠️ Failed to add appointment.");
+          }
         } else if (command.startsWith("addMedication")) {
-          // post data to /api/medications
-        } else if (command.startsWith("goodMorning")) {
-          // Append reminders for the day
-          let dayReminders = "";
+          try {
+            const medicationData = {
+              name: "Lisinopril",
+              dose: "10mg",
+              frequency: { unit: "hours", value: 12 },
+              filled_date: new Date().toISOString().split("T")[0],
+              expiration_date: "2026-01-20",
+              refills: 2,
+              amount: 90,
+            };
 
-          // Get today's date (YYYY-MM-DD format)
-          const today = new Date().toISOString().split("T")[0];
+            const response = await axios.post(
+              `${API_URL}/api/medications`,
+              medicationData,
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+              }
+            );
 
-          // Filter today's appointments
+            setResponse(`✅ Medication added: ${response.data.name}`);
+          } catch (error) {
+            console.error("❌ Error adding medication:", error);
+            setResponse("⚠️ Failed to add medication.");
+          }
+        } else if (command.startsWith("showReminders")) {
+          // eslint-disable-next-line prefer-const
+          let allReminders = [];
+
+          const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+
           const dayAppointments =
-            user?.reminders.appointments.filter((appointment) =>
+            user?.reminders?.appointments.filter((appointment) =>
               appointment.datetime.startsWith(today)
             ) || [];
 
-          // Filter today's medications (checks full date range)
           const dayMedications =
-            user?.reminders.medications.filter(
+            user?.reminders?.medications.filter(
               (medication) =>
-                new Date(medication.filled_date) <= new Date() &&
-                new Date(medication.expiration_date) >= new Date()
+                new Date(medication.filled_date) <= new Date(today) &&
+                new Date(today) <= new Date(medication.expiration_date)
             ) || [];
 
-          // Combine & Sort Reminders (Use Type Guard for datetime)
-          const combinedReminders = [
-            ...dayAppointments,
-            ...dayMedications,
-          ].sort((a, b) => {
-            const dateA =
-              "datetime" in a ? new Date(a.datetime).getTime() : Infinity;
-            const dateB =
-              "datetime" in b ? new Date(b.datetime).getTime() : Infinity;
-            return dateA - dateB;
-          });
-
-          if (combinedReminders.length > 0) {
-            dayReminders = "<br><br>Here are your reminders for today:<br><br>";
-
-            for (const reminder of combinedReminders) {
-              if ("datetime" in reminder) {
-                // It's an appointment
-                dayReminders += `🗓️ Appointment: ${
-                  reminder.title
-                } at ${new Date(reminder.datetime).toLocaleTimeString()}<br>`;
-              } else {
-                // It's a medication
-                dayReminders += `💊 Medication: ${reminder.name} - ${reminder.dose}<br>`;
-              }
-            }
-          } else {
-            dayReminders = "<br><br>No reminders for today!<br><br>";
+          // 🗓️ Add appointments with their time
+          for (const appointment of dayAppointments || []) {
+            allReminders.push({
+              time: new Date(appointment.datetime),
+              details: `🗓️ Appointment: ${appointment.title} at ${appointment.location}`,
+            });
           }
 
-          // Set Response
+          // 💊 Add medications with calculated dose times
+          for (const medication of dayMedications || []) {
+            // eslint-disable-next-line prefer-const
+            let doseTime = new Date();
+            doseTime.setHours(8, 0, 0, 0); // Start at 8 AM
+
+            const frequencyHours = medication.frequency?.value || 24;
+
+            while (doseTime.getHours() < 24) {
+              allReminders.push({
+                time: new Date(doseTime),
+                details: `💊 Medication: ${medication.name} - ${medication.dose}`,
+              });
+
+              doseTime.setHours(doseTime.getHours() + frequencyHours);
+              if (doseTime.getDate() !== new Date().getDate()) break;
+            }
+          }
+
+          // 🔄 Sort all reminders by time
+          allReminders.sort((a, b) => a.time.getTime() - b.time.getTime());
+
+          // 🔹 Generate reminder list
+          let dayReminders = "<br><br>Here are your reminders for today:<ul>";
+
+          for (const reminder of allReminders) {
+            dayReminders += `<li>${reminder.time.toLocaleTimeString([], {
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
+            })} - ${reminder.details}</li>`;
+          }
+
+          dayReminders += "</ul>";
+
+          // 🗓️ Get current day name
+          const weekday = new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+          });
+
+          dayReminders += `<br>Happy ${weekday}!`;
+
+          const currentHour = new Date().getHours();
+          const greeting =
+            currentHour < 12
+              ? "Good morning"
+              : currentHour < 18
+              ? "Good afternoon"
+              : "Good evening";
+
           setResponse(
-            `Good morning, ${
+            `${greeting}, ${
               user?.medical_profile.legal_name.split(" ")[0]
             }! ${dayReminders}`
           );
         } else if (command.startsWith("callEmergencyContact")) {
-          // append a link to call their emergency contact
           setResponse(
-            `${response}<br><br><a href="tel:${user?.medical_profile.emergency_contact.phone_number}">Click here to call your emergency contact (${user?.medical_profile.emergency_contact.name})</a>`
+            `${response}<br><br><a href="tel:${user?.medical_profile.emergency_contact.phone_number}">📞 Click here to call your emergency contact (${user?.medical_profile.emergency_contact.name})</a>`
           );
         }
       };
+
       handleCommand();
     }
   }, [command, response, user]);
@@ -194,7 +291,7 @@ const ChatBot = () => {
     setIsListening(false);
 
     setCommand("none");
-    const aiResponse = await fetchGeminiResponse(voiceInput);
+    const aiResponse = await fetchGeminiResponse(voiceInput, user?.medical_profile.medical_conditions || "");
     const [userResponse, aiCommand] = aiResponse.split("%%%");
     setResponse(userResponse);
     setCommand(aiCommand);
@@ -207,7 +304,7 @@ const ChatBot = () => {
 
   const handleSubmit = async () => {
     setCommand("none");
-    const aiResponse = await fetchGeminiResponse(prompt);
+    const aiResponse = await fetchGeminiResponse(prompt, user?.medical_profile.medical_conditions || "");
     const [userResponse, aiCommand] = aiResponse.split("%%%");
     setResponse(userResponse);
     setCommand(aiCommand);
@@ -252,7 +349,13 @@ const ChatBot = () => {
     if (videoRef.current && canvasRef.current) {
       const context = canvasRef.current.getContext("2d");
       if (context) {
-        context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+        context.drawImage(
+          videoRef.current,
+          0,
+          0,
+          canvasRef.current.width,
+          canvasRef.current.height
+        );
         const dataUrl = canvasRef.current.toDataURL("image/png");
         setImage(dataUrl); // Set the image to show in the UI
         processImage(dataUrl);
@@ -280,16 +383,18 @@ const ChatBot = () => {
         uintArray[i] = byteArray.charCodeAt(i);
       }
 
-      const file = new File([uintArray], "captured_image.png", { type: "image/png" });
+      const file = new File([uintArray], "captured_image.png", {
+        type: "image/png",
+      });
 
       // Extract text from the image using Tesseract.js
       const text = await extractTextFromImage(file);
       setPrompt(text);
 
       // Get the Gemini response
-      const aiResponse = await fetchGeminiResponse(text);
+      const aiResponse = await fetchGeminiResponse(text, user?.medical_profile.medical_conditions || "");
       setResponse(aiResponse);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setResponse("Error processing the image");
     } finally {
@@ -320,15 +425,18 @@ const ChatBot = () => {
               <Mic size={26} color="white" />
             </button>
 
-            <button className="button camera-button" onClick={() => {
-              setIsCameraActive(!isCameraActive);
-              if (!isCameraActive) {
-                startCamera();
-              } else {
-                stopCamera();
-              }
-            }}>
-             <Camera size={26} color="white" />
+            <button
+              className="button camera-button"
+              onClick={() => {
+                setIsCameraActive(!isCameraActive);
+                if (!isCameraActive) {
+                  startCamera();
+                } else {
+                  stopCamera();
+                }
+              }}
+            >
+              <Camera size={26} color="white" />
             </button>
           </div>
         </div>
@@ -338,17 +446,21 @@ const ChatBot = () => {
           </div>
         )}
 
-            
         {isCameraActive && (
           <div className="camera-container">
             <video ref={videoRef} autoPlay width="100%" height="auto" />
-            <canvas ref={canvasRef} style={{ display: "none" }} width={640} height={480}></canvas>
+            <canvas
+              ref={canvasRef}
+              style={{ display: "none" }}
+              width={640}
+              height={480}
+            ></canvas>
             <button className="button capture-button" onClick={captureImage}>
               <Camera size={26} color="white" />
             </button>
           </div>
         )}
-       </div> 
+      </div>
 
       {loading && <p>Loading...</p>}
       {response && markdown && (
