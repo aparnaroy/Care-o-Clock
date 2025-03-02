@@ -17,7 +17,7 @@ interface MedicalProfile {
   legal_name: string;
   dob: string;
   emergency_contact: EmergencyContact;
-  medical_conditions: string[];
+  medical_conditions: string | undefined;
 }
 
 interface Frequency {
@@ -291,7 +291,7 @@ const ChatBot = () => {
     setIsListening(false);
 
     setCommand("none");
-    const aiResponse = await fetchGeminiResponse(voiceInput);
+    const aiResponse = await fetchGeminiResponse(voiceInput, user?.medical_profile.medical_conditions || "");
     const [userResponse, aiCommand] = aiResponse.split("%%%");
     setResponse(userResponse);
     setCommand(aiCommand);
@@ -304,7 +304,7 @@ const ChatBot = () => {
 
   const handleSubmit = async () => {
     setCommand("none");
-    const aiResponse = await fetchGeminiResponse(prompt);
+    const aiResponse = await fetchGeminiResponse(prompt, user?.medical_profile.medical_conditions || "");
     const [userResponse, aiCommand] = aiResponse.split("%%%");
     setResponse(userResponse);
     setCommand(aiCommand);
@@ -392,7 +392,7 @@ const ChatBot = () => {
       setPrompt(text);
 
       // Get the Gemini response
-      const aiResponse = await fetchGeminiResponse(text);
+      const aiResponse = await fetchGeminiResponse(text, user?.medical_profile.medical_conditions || "");
       setResponse(aiResponse);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
