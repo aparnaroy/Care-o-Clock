@@ -10,6 +10,11 @@ import {
 } from "@chakra-ui/react";
 
 export function Login() {
+  const [fullName, setFullName] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [emergencyName, setEmergencyName] = useState("");
+  const [emergencyPhone, setEmergencyPhone] = useState("");
+  const [medicalConditions, setMedicalConditions] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -36,6 +41,48 @@ export function Login() {
             <Tabs.Content value="login">
               <form onSubmit={handleLogin}>
                 <Fieldset.Root size="lg" maxW="md">
+                  <Input
+                    placeholder="Full Name"
+                    name="fullName"
+                    type="text"
+                    onChange={(e) => setFullName(e.target.value)}
+                  />
+
+                  <Input
+                    placeholder="Date of Birth"
+                    name="birthDate"
+                    type="date"
+                    onChange={(e) => setBirthDate(e.target.value)}
+                  />
+
+                  <Input
+                    placeholder="Emergency Contact Name"
+                    name="emergencyName"
+                    type="text"
+                    onChange={(e) => setEmergencyName(e.target.value)}
+                  />
+
+                  <Input
+                    placeholder="Emergency Phone Number"
+                    name="emergencyPhone"
+                    type="tel"
+                    onChange={(e) => setEmergencyPhone(e.target.value)}
+                  />
+
+                  <Input
+                    placeholder="Date of Birth"
+                    name="birthDate"
+                    type="date"
+                    onChange={(e) => setBirthDate(e.target.value)}
+                  />
+
+                  <Input
+                    placeholder="Medical Conditions"
+                    name="medicalConditions"
+                    type="text"
+                    onChange={(e) => setMedicalConditions(e.target.value)}
+                  />
+
                   <Fieldset.Content>
                     <Input
                       placeholder="Email"
@@ -45,7 +92,7 @@ export function Login() {
                     />
 
                     <Input
-                      placeholder="Password"
+                      placeholder="Create Password"
                       name="password"
                       onChange={(e) => setPassword(e.target.value)}
                     />
