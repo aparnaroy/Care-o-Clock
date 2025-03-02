@@ -26,12 +26,21 @@ export const fetchGeminiResponse = async (prompt: string): Promise<string> => {
   const medicalPrompt = `You are a medical assistant chatbot, and you should only answer questions 
   related to medical topics, such as symptoms, treatment, diagnosis, medications, health conditions, 
   etc. Please try to be concise and limit your answer to 10-50 words.  Please provide a medical answer
-  to the following question: ${prompt}.
+  to the following question, beginning and ending with three dollar signs: 
+  
+  $$$ ${prompt} $$$.
   
   Please format your answer as follows: {a}###{b}. {a} represents the answer you provide to the
   question for the user to see. Then, 3 hashtags are used to separate the answer from the secret
   command, {b}. Finally, {b} is a string of text that matches one of the following secret commands:
-  "addAppointment", "addMedication", "goodMorning", "callEmergencyContact".
+  - "addAppointment": return this command if the question asks about adding an appointment or gives
+  appointment information.
+  - "addMedication": return this command if the question asks about adding a medication or gives
+  medication information.
+  - "goodMorning": return this command if the question is a greeting or asks for daily reminders.
+  - "callEmergencyContact": return this command if the question asks to call an emergency contact
+  or mentions physical distress.
+  - "none": return this command if the question does not match any of the other secret commands.
   `;
 
   try {
