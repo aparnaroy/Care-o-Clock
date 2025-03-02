@@ -145,6 +145,7 @@ const ChatBot = () => {
               }
             );
 
+            console.log(response);
             // setResponse(`✅ Appointment added: ${response.data.title}`);
           } catch (error) {
             console.error("❌ Error adding appointment:", error);
