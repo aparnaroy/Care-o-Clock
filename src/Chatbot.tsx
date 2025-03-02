@@ -1,11 +1,15 @@
-import { useState } from "react";
-import { fetchGeminiResponse /*, extractTextFromImage */ } from "./services/gemini";
-import { Mic, Send } from 'lucide-react';
+import { useState, useEffect } from "react";
+import {
+  fetchGeminiResponse /*, extractTextFromImage */,
+} from "./services/gemini";
+import { Mic, Send } from "lucide-react";
+import { marked } from "marked";
 import cece from "./assets/cece.png";
 
 const ChatBot = () => {
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
+  const [markdown, setMarkdown] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [loading] = useState(false);
   // const [image, setImage] = useState<string | null>(null);
@@ -28,7 +32,9 @@ const ChatBot = () => {
     recognition.start();
   };
 
-  recognition.onresult = async (event: { results: { transcript: unknown }[][] }) => {
+  recognition.onresult = async (event: {
+    results: { transcript: unknown }[][];
+  }) => {
     const voiceInput = event.results[0][0].transcript as string;
     setPrompt(voiceInput);
     setIsListening(false);
@@ -46,6 +52,15 @@ const ChatBot = () => {
     const aiResponse = await fetchGeminiResponse(prompt);
     setResponse(aiResponse);
   };
+
+  useEffect(() => {
+    const convertMarkdown = async () => {
+      const html = await marked(response);
+      setMarkdown(html); 
+    };
+
+    convertMarkdown();
+  }, [response]);
 
   // // Start the camera to capture images
   // const startCamera = async () => {
@@ -169,15 +184,14 @@ const ChatBot = () => {
         </div>
       </div>
       {loading && <p>Loading...</p>}
-      {response && <p className="response mt-4 p-2 border">{response} </p>}
+      {response && markdown && <p className="response mt-4 p-2 border">{markdown} </p>}
 
-      <img
-        src={cece}
-        alt="Chatbot"
-        className="chatbot-img"
-      />
+      <img src={cece} alt="Chatbot" className="chatbot-img" />
     </div>
   );
 };
 
 export default ChatBot;
+function useEffect(arg0: () => void, arg1: string[]) {
+  throw new Error("Function not implemented.");
+}
