@@ -105,15 +105,72 @@ const ChatBot = () => {
         } else if (command.startsWith("addMedication")) {
           // post data to /api/medications
         } else if (command.startsWith("goodMorning")) {
-          // append reminders for the day
+          // Append reminders for the day
+          let dayReminders = "";
+
+          // Get today's date (YYYY-MM-DD format)
+          const today = new Date().toISOString().split("T")[0];
+
+          // Filter today's appointments
+          const dayAppointments =
+            user?.reminders.appointments.filter((appointment) =>
+              appointment.datetime.startsWith(today)
+            ) || [];
+
+          // Filter today's medications (checks full date range)
+          const dayMedications =
+            user?.reminders.medications.filter(
+              (medication) =>
+                new Date(medication.filled_date) <= new Date() &&
+                new Date(medication.expiration_date) >= new Date()
+            ) || [];
+
+          // Combine & Sort Reminders (Use Type Guard for datetime)
+          const combinedReminders = [
+            ...dayAppointments,
+            ...dayMedications,
+          ].sort((a, b) => {
+            const dateA =
+              "datetime" in a ? new Date(a.datetime).getTime() : Infinity;
+            const dateB =
+              "datetime" in b ? new Date(b.datetime).getTime() : Infinity;
+            return dateA - dateB;
+          });
+
+          if (combinedReminders.length > 0) {
+            dayReminders = "<br><br>Here are your reminders for today:<br><br>";
+
+            for (const reminder of combinedReminders) {
+              if ("datetime" in reminder) {
+                // It's an appointment
+                dayReminders += `🗓️ Appointment: ${
+                  reminder.title
+                } at ${new Date(reminder.datetime).toLocaleTimeString()}<br>`;
+              } else {
+                // It's a medication
+                dayReminders += `💊 Medication: ${reminder.name} - ${reminder.dose}<br>`;
+              }
+            }
+          } else {
+            dayReminders = "<br><br>No reminders for today!<br><br>";
+          }
+
+          // Set Response
+          setResponse(
+            `Good morning, ${
+              user?.medical_profile.legal_name.split(" ")[0]
+            }! ${dayReminders}`
+          );
         } else if (command.startsWith("callEmergencyContact")) {
           // append a link to call their emergency contact
-          setResponse(`${response}<br><br><a href="tel:${user?.medical_profile.emergency_contact.phone_number}">Click here to call your emergency contact (${user?.medical_profile.emergency_contact.name})</a>`);
+          setResponse(
+            `${response}<br><br><a href="tel:${user?.medical_profile.emergency_contact.phone_number}">Click here to call your emergency contact (${user?.medical_profile.emergency_contact.name})</a>`
+          );
         }
       };
       handleCommand();
     }
-  }, [command]);
+  }, [command, response, user]);
 
   // SpeechRecognition setup
   const SpeechRecognition =
