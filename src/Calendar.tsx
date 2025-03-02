@@ -155,7 +155,7 @@ const MyCalendar = () => {
 
         {view === "day" ? (
             <div>
-                <button onClick={() => setView("month")}>Month View</button>
+                <button onClick={() => setView("month")} style={{ color: 'white' }}>Month View</button>
                 <div
                     style={{
                     display: "flex",
@@ -163,11 +163,15 @@ const MyCalendar = () => {
                     alignItems: "center",
                     }}
                 >
-                    <button onClick={handlePrevDay}>Previous Day</button>
+                    <button onClick={handlePrevDay} style={{ backgroundColor: '#7d89e0', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}>
+                        Previous Day ←
+                    </button>
                     <Box padding="20px">
                         <h2>{selectedDate.toDateString()}</h2>
                     </Box>
-                    <button onClick={handleNextDay}>Next Day</button>
+                    <button onClick={handleNextDay} style={{ backgroundColor: '#7d89e0', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}>
+                        → Next Day
+                    </button>
                 </div>
             <Box padding="20px">
                 <h2><b>Appointments / Medications for {selectedDate.toDateString()}:</b></h2>
@@ -183,7 +187,7 @@ const MyCalendar = () => {
                     <li key={`appointment-${index}`}>
                         <input type="checkbox" id={`appointment-checkbox-${index}`} />
                         <label htmlFor={`appointment-checkbox-${index}`}>
-                        {appointment.title} at{" "}
+                        {" "}{appointment.title} at{" "}
                         {appointment.location}
                         </label>
                     </li>
@@ -194,8 +198,8 @@ const MyCalendar = () => {
                     <li key={`medication-${index}`}>
                         <input type="checkbox" id={`medication-checkbox-${index}`} />
                         <label htmlFor={`medication-checkbox-${index}`}>
-                        Take {medication.name} ({medication.dose}) -{" "}
-                        every {medication.frequency.value} {medication.frequency.unit}
+                        {" "}Take {medication.name} ({medication.dose}) -{" "}
+                        every {medication.frequency.value} {medication.frequency.unit}{medication.frequency.value > 1 ? "s" : ""}{" "}
                         </label>
                     </li>
                     ))}
@@ -208,7 +212,7 @@ const MyCalendar = () => {
         ) : (
             <div>
                 <Box padding="20px">
-                    <button onClick={() => setView("day")}>Day View</button>
+                    <button onClick={() => setView("day")} style={{ color: 'white' }}>Day View</button>
                 </Box>
                 <Calendar
                     onClickDay={handleDateChange}
