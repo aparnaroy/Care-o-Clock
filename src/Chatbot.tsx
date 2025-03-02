@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { fetchGeminiResponse /*, extractTextFromImage */ } from "./services/gemini";
+import { Mic, Send } from 'lucide-react';
 
 const ChatBot = () => {
   const [prompt, setPrompt] = useState("");
@@ -115,57 +116,65 @@ const ChatBot = () => {
   // };
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold">Gemini AI Chat</h1>
-      <textarea
-        className="border p-2 w-full"
-        placeholder="Ask me anything..."
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-      />
-      <div className="mt-2">
-        <button className="bg-blue-500 text-white p-2 mr-2" onClick={handleSubmit}>
-          Send
-        </button>
+    <div>
+      <div className="chatbot-container">
+        <h1 className="ask-cece">Ask Cece</h1>
+        <div className="textarea-container">
+          <textarea
+            className="textarea-input"
+            placeholder="Ask me anything..."
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+          />
+          <div className="button-container">
+            <button className="button send-button" onClick={handleSubmit}>
+              <span>Send</span> <Send size={20} />
+            </button>
+            <button
+              className="button voice-button"
+              onClick={handleSpeechStart}
+              disabled={isListening}
+            >
+              {/* {isListening ? "Listening..." : "Start Voice Input"} */}
+              <Mic size={24} color="white" />
+            </button>
+          </div>
 
-        <button
-          className="bg-green-500 text-white p-2"
-          onClick={handleSpeechStart}
-          disabled={isListening}
-        >
-          {isListening ? "Listening..." : "Start Voice Input"}
-        </button>
-      </div>
+          {/* Start Camera Button
+          <div className="mt-2">
+            <button className="bg-yellow-500 text-white p-2" onClick={startCamera}>
+              Start Camera
+            </button>
+          </div>
 
-      {/* Start Camera Button
-      <div className="mt-2">
-        <button className="bg-yellow-500 text-white p-2" onClick={startCamera}>
-          Start Camera
-        </button>
-      </div>
+          <div className="mt-2">
+            <video ref={videoRef} autoPlay width="100%" height="auto" />
+          </div>
 
-      <div className="mt-2">
-        <video ref={videoRef} autoPlay width="100%" height="auto" />
-      </div>
+          Canvas Element to capture the image from the video feed
+          <canvas ref={canvasRef} style={{ display: "none" }} width={640} height={480}></canvas>
 
-      Canvas Element to capture the image from the video feed
-      <canvas ref={canvasRef} style={{ display: "none" }} width={640} height={480}></canvas>
+          <div className="mt-2">
+            <button className="bg-blue-500 text-white p-2" onClick={captureImage}>
+              Capture Image
+            </button>
+          </div>
 
-      <div className="mt-2">
-        <button className="bg-blue-500 text-white p-2" onClick={captureImage}>
-          Capture Image
-        </button>
-      </div>
-
-      {image && (
-        <div className="mt-2">
-          <img src={image} alt="Captured" width="100%" />
+          {image && (
+            <div className="mt-2">
+              <img src={image} alt="Captured" width="100%" />
+            </div>
+          )} */}
         </div>
-      )} */}
-
+      </div>
       {loading && <p>Loading...</p>}
+      {response && <p className="response mt-4 p-2 border">{response} </p>}
 
-      {response && <p className="mt-4 p-2 border">{response}</p>}
+      <img
+        src="data:image/jpeg;base64,"
+        alt="Chatbot"
+        className="chatbot-img"
+      />
     </div>
   );
 };

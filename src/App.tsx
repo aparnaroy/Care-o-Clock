@@ -3,18 +3,22 @@ import "./App.css";
 import ChatBot from "./Chatbot";
 import UserProfile from "./components/UserProfile";
 import { Login } from "./Login";
+import Home from "./Home";
 // import ProfilePage from './Profile'
 
 function App() {
   return (
     <>
-      <div>
-        <img src={logo} className="logo" alt="Vite logo" />
+      <div className="logo-container">
+        <img src={logo} className="logo" alt="Care o'Clock logo" />
       </div>
-      {/* <ProfilePage /> */}
-      <Login />
-      <ChatBot />
-      <UserProfile />
+      <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+        <Home />
+        {/* <ProfilePage /> */}
+        {/* <Login /> */}
+        {/* <ChatBot /> */}
+        {/* <UserProfile /> */}
+      </div>
     </>
   );
 }
