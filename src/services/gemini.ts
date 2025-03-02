@@ -1,19 +1,26 @@
 import axios from "axios";
-// import Tesseract from "tesseract.js";
 
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`;
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${
+  import.meta.env.VITE_GEMINI_API_KEY
+}`;
 
-export const extractTextFromImage = async (imageFile: File): Promise<string> => {
+export const extractTextFromImage = async (
+  imageFile: File
+): Promise<string> => {
   const formData = new FormData();
-  formData.append('file', imageFile);
-  formData.append('apikey', `${import.meta.env.VITE_OCR_API_KEY}`);
-  
-  try {
-    const response = await axios.post('https://api.ocr.space/parse/image', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+  formData.append("file", imageFile);
+  formData.append("apikey", `${import.meta.env.VITE_OCR_API_KEY}`);
 
-    const text = response.data.ParsedResults[0]?.ParsedText || 'No text found';
+  try {
+    const response = await axios.post(
+      "https://api.ocr.space/parse/image",
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+
+    const text = response.data.ParsedResults[0]?.ParsedText || "No text found";
     return text;
   } catch (error) {
     console.error("Error with OCR.Space API:", error);
@@ -21,13 +28,15 @@ export const extractTextFromImage = async (imageFile: File): Promise<string> => 
   }
 };
 
-export const fetchGeminiResponse = async (prompt: string): Promise<string> => {
+export const fetchGeminiResponse = async (prompt: string, conditions: string): Promise<string> => {
   // Prepend a medical assistant context to ensure Gemini only responds to medical queries
   const medicalPrompt = `You are a medical assistant chatbot who responds to "Cece", and you only answer questions 
   related to medical topics, such as symptoms, treatment, diagnosis, medications, health conditions, 
   etc. Please be as helpful as possible by responding thoughtfully and informatively to their needs.
+  The user's medical conditions are: ${conditions}. If it is relevant to the question, please incorporate
+  this information into your response (e.g., "Based on your history of diabetes...").
   Please try to be concise and limit your answer to 10-50 words. Please provide a medical answer
-  to the following question.
+  to the following question:
 
   BEGIN QUESTION: ${prompt}
   END QUESTION
