@@ -110,28 +110,28 @@ const ChatBot = () => {
 
         if (command.startsWith("addAppointment")) {
           try {
-            // Extract appointment details from the command string
-            const [, title, dateTimeStr, location, additionalInfo = ""] =
-              command.split(":")[1]?.split(",") || [];
+            // ✅ Extract values safely
+            const commandParts = command.split(":")[1]?.split(",");
 
-            if (!title || !dateTimeStr || !location) {
-              setResponse("⚠️ Missing required appointment details.");
-              return;
+            if (!commandParts || commandParts.length < 3) {
+              throw new Error("❌ Missing required appointment details.");
             }
 
-            // Convert natural language date to ISO string
-            const parsedDate = new Date(dateTimeStr); // Improve this with a natural language parser if needed
-            if (isNaN(parsedDate.getTime())) {
-              setResponse("⚠️ Invalid appointment date.");
-              return;
+            const [title, datetime, location, notes = ""] = commandParts.map(
+              (part) => part.trim()
+            );
+
+            // ✅ Ensure required fields are present
+            if (!title || !datetime || !location) {
+              throw new Error("❌ Missing required appointment details.");
             }
 
-            // Create appointment object
+            // ✅ Construct appointment payload
             const appointmentData = {
-              title: title.trim(),
-              datetime: parsedDate.toISOString(),
-              location: location.trim(),
-              notes: additionalInfo.trim(),
+              title,
+              datetime: new Date(datetime).toISOString(), // Convert to ISO format
+              location,
+              notes, // Optional
             };
 
             // Send appointment to backend
