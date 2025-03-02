@@ -395,7 +395,7 @@ const ChatBot = () => {
     // After 6 seconds, submit:
     setTimeout(() => {
       handleSubmit();
-    }, 6000);
+    }, 10000);
   };
 
   // Process the captured image
