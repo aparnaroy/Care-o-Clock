@@ -41,8 +41,8 @@ const MyCalendar = () => {
     const API_URL =
         import.meta.env.VITE_API_URL || "https://care-o-clock.up.railway.app";
 
-    const [checkedAppointments, setCheckedAppointments] = useState<boolean[]>([]);
-    const [checkedMedications, setCheckedMedications] = useState<boolean[]>([]);
+    // const [checkedAppointments, setCheckedAppointments] = useState<boolean[]>([]);
+    // const [checkedMedications, setCheckedMedications] = useState<boolean[]>([]);
 
     useEffect(() => {
         const fetchUser = async () => {
