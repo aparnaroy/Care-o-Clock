@@ -1,6 +1,6 @@
 import logo from "./assets/full-logo.png";
 import "./App.css";
-import ChatBot from "./Chatbot";
+import Home from "./Home";
 import UserProfile from "./components/UserProfile";
 import { Login } from "./Login";
 import { useAuth } from "./hooks/useAuth";
@@ -16,8 +16,10 @@ function App() {
 
       {!user ? <Login /> : (
         <>
-          <ChatBot />
-          <UserProfile />
+          <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+            <Home />
+            <UserProfile />
+          </div>
         </>
       )}
     </>
