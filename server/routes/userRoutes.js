@@ -25,25 +25,25 @@ router.get("/profile", authenticateUser, async (req, res) => {
     }
 });
 
-router.get("/:email", async (req, res) => {
-    console.log(`🔍 Received request for email: ${req.params.email}`);
+// router.get("/:email", async (req, res) => {
+//     console.log(`🔍 Received request for email: ${req.params.email}`);
 
-    try {
-        // Run case-insensitive search
-        const user = await User.findOne({ email: new RegExp(`^${req.params.email}$`, "i") });
+//     try {
+//         // Run case-insensitive search
+//         const user = await User.findOne({ email: new RegExp(`^${req.params.email}$`, "i") });
 
-        console.log(`📢 MongoDB Response:`, user);
+//         console.log(`📢 MongoDB Response:`, user);
 
-        if (!user) {
-            console.log("❌ User not found");
-            return res.status(404).json({ message: "User not found" });
-        }
+//         if (!user) {
+//             console.log("❌ User not found");
+//             return res.status(404).json({ message: "User not found" });
+//         }
 
-        res.json(user);
-    } catch (error) {
-        console.error("❌ API Error:", error);
-        res.status(500).json({ message: "Server error", error });
-    }
-});
+//         res.json(user);
+//     } catch (error) {
+//         console.error("❌ API Error:", error);
+//         res.status(500).json({ message: "Server error", error });
+//     }
+// });
 
 export default router;
