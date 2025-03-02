@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./ProfilePage.css";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
 // Define User Type
 interface EmergencyContact {
@@ -53,7 +54,7 @@ const Profile = () => {
 
     fetchUser();
   }, [API_URL]);
-  
+
   return (
     <div className="container">
       {/* Name and Avatar Placeholder */}
@@ -65,32 +66,56 @@ const Profile = () => {
       </div>
 
       {/* Profile Details */}
-      <div className="profile-box">
-        <div className="profile-detail">
-          <p className="detail-title">DOB:</p>
-          <div className="placeholder">
+      <br></br>
+      <br></br>
+      <Box width="100%">
+        <Flex justifyContent="space-between" alignItems="flex-start" mb="10px">
+          <Text
+            textAlign="left"
+            flexBasis="40%"
+            pr="15px"
+            boxSizing="border-box"
+          >
+            <b>DOB:</b>
+          </Text>
+          <Text textAlign="right" flexBasis="60%" boxSizing="border-box">
             {user?.medical_profile?.dob || "Loading..."}
-          </div>
-        </div>
-
-        <div className="profile-detail">
-          <p className="detail-title">Emergency Contact:</p>
-          <div className="placeholder">
+          </Text>
+        </Flex>
+        <br></br>
+        <Flex justifyContent="space-between" alignItems="flex-start" mb="10px">
+          <Text
+            textAlign="left"
+            flexBasis="40%"
+            pr="15px"
+            boxSizing="border-box"
+          >
+            <b>Emergency Contact:</b>
+          </Text>
+          <Text textAlign="right" flexBasis="60%" boxSizing="border-box">
             {user?.medical_profile?.emergency_contact
               ? `${user.medical_profile.emergency_contact.name} (${user.medical_profile.emergency_contact.phone_number})`
               : "Loading..."}
-          </div>
-        </div>
-
-        <div className="profile-detail">
-          <p className="detail-title">Medical Condition(s):</p>
-          <div className="placeholder">
+          </Text>
+        </Flex>
+        <br></br>
+        <Flex justifyContent="space-between" alignItems="flex-start" mb="10px">
+          <Text
+            textAlign="left"
+            flexBasis="40%"
+            pr="15px"
+            boxSizing="border-box"
+          >
+            <b>Medical Condition(s):</b>
+          </Text>
+          <Text textAlign="right" flexBasis="60%" boxSizing="border-box">
             {user?.medical_profile?.medical_conditions.length
               ? user.medical_profile.medical_conditions.join(", ")
               : "None"}
-          </div>
-        </div>
-      </div>
+          </Text>
+        </Flex>
+        <br></br>
+      </Box>
 
       {/* Sign Out Button */}
       <button className="sign-out-button" onClick={handleLogout}>
