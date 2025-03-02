@@ -11,12 +11,15 @@
     "start": "vite preview --host 0.0.0.0 --port $PORT"
   },
   "dependencies": {
+    "@chakra-ui/cli": "^3.8.1",
     "@chakra-ui/react": "^3.8.1",
     "@chakra-ui/tabs": "^3.0.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@types/tesseract.js": "^0.0.2",
+    "add": "^2.0.6",
     "axios": "^1.8.1",
+    "checkbox": "^0.0.1",
     "cors": "^2.8.5",
     "dompurify": "^3.2.4",
     "dotenv": "^16.4.7",
@@ -30,6 +33,7 @@
     "react-calendar": "^5.1.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
+    "snippet": "^0.1.0",
     "tesseract.js": "^6.0.0"
   },
   "devDependencies": {
