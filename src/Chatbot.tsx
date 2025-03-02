@@ -208,7 +208,7 @@ const ChatBot = () => {
 
           // 🔹 Generate reminder list
           let dayReminders =
-            "<br><br>Here are your reminders for today:<br><br><ul>";
+            "<br><br>Here are your reminders for today:<ul>";
 
           for (const reminder of allReminders) {
             dayReminders += `<li>${reminder.time.toLocaleTimeString([], {
