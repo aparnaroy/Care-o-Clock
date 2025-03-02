@@ -184,7 +184,7 @@ const ChatBot = () => {
             };
 
             const response = await axios.post(
-              `${API_URL}/api/medications`,
+              `${API_URL}/api/reminders/medications`,
               medicationData,
               {
                 headers: {
