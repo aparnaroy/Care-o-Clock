@@ -1,21 +1,27 @@
 import logo from "./assets/full-logo.png";
 import "./App.css";
 import Home from "./Home";
-import UserProfile from "./components/UserProfile";
 import { Login } from "./Login";
 import { useAuth } from "./hooks/useAuth";
 import { FaUserCircle } from 'react-icons/fa';
 import { Center } from "@chakra-ui/react";
+import { useState } from "react";
+import NavBar from "./NavBar";
+import Calendar from "./Calendar";
+import Profile from "./Profile";
+import { Page } from "./PageEnums";
+
 
 function App() {
   const user = useAuth();
+  const [currPage, setCurrPage] = useState(Page.Home);
 
   return (
     <>
       <div className="logo-container">
-        <img src={logo} className="logo" alt="Care o'Clock logo" />
+        <img src={logo} className="logo" alt="Care o'Clock logo"  />
         {user && (
-          <div className="profile-icon">
+          <div className="profile-icon" onClick={() => setCurrPage(Page.Profile)}>
             <FaUserCircle size={48} />
           </div>
         )}
@@ -27,8 +33,11 @@ function App() {
         ) : (
           <>
             <div style={{ paddingLeft: "20px", paddingRight: "20px" }}>
-              <Home />
-              <UserProfile />
+            {currPage === Page.Home && <Home />}
+            {currPage === Page.Calendar && <Calendar />}
+            {currPage === Page.Profile && <Profile />}
+
+              <NavBar setCurrentPage={setCurrPage}/>
             </div>
           </>
         )}
