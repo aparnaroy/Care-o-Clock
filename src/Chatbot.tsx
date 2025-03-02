@@ -161,7 +161,7 @@ const ChatBot = () => {
             console.error("❌ Error adding medication:", error);
             setResponse("⚠️ Failed to add medication.");
           }
-        } else if (command.startsWith("goodMorning")) {
+        } else if (command.startsWith("showTasks")) {
           // eslint-disable-next-line prefer-const
           let allReminders = [];
 
@@ -229,9 +229,7 @@ const ChatBot = () => {
           dayReminders += `<br>Happy ${weekday}!`;
 
           setResponse(
-            `Good morning, ${
-              user?.medical_profile.legal_name.split(" ")[0]
-            }! ${dayReminders}`
+            `${dayReminders}`
           );
         } else if (command.startsWith("callEmergencyContact")) {
           setResponse(
