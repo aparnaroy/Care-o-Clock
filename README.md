@@ -2,6 +2,8 @@
 
 ### HenHacks 2025 - 2nd Place Health & Wellness Hack
 
+<img width="1152" alt="Screenshot 2025-03-16 at 1 22 17 PM" src="https://github.com/user-attachments/assets/4b33b96a-eab7-444e-930a-f0ecdb5f2d7a" />
+
 ## Inspiration
 
 Many of us have elderly loved ones who might struggle remembering their doctors' appointments or to take their medications on time. Missing doses and forgotten appointments can then lead to more health complications. We came up with the idea of this app to help out the elderly who might be facing similar issues with remembering their daily tasks. Many of the existing apps are too complex and lack accessible features like simplified navigation and voice assistance.
