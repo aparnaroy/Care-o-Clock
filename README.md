@@ -12,13 +12,13 @@ Care o'Clock is an all-in-one voice-assisted health management app. It helps use
 
 ## How We Built It
 
-- React/Typescript as our programming framework
-- ChakraUI for our frontend
-- MongoDB as our data storage
-- Gemini API for our AI chatbot
-- getUserMedia API for camera access
-- OCR Space API for image-to-text conversion
-- Web Speech API for speech-to-text conversion
+- **Languages & Frameworks:** React/Typescript, ChakraUI
+- **Database:** MongoDB as our data storage
+- **AI Integration:** Gemini API for our AI chatbot
+- **Media & Data Processing APIs:**
+  - getUserMedia API for camera access
+  - OCR Space API for image-to-text conversion
+  - Web Speech API for speech-to-text conversion
 
 ## Challenges We Ran Into
 
